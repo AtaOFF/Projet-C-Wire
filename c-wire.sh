@@ -21,4 +21,4 @@ if [ ! -x "$FILE_C" ]; then
     exit 1
 fi
 
-"$FILE_C" < "$FILE_TEMP" > "$OUTPUT_FILE"
+./code
