@@ -42,16 +42,17 @@ AVL* createAVL(int v){
 
 // Function rotation left
 AVL* rotationLeft(AVL* a){
-    AVL* pivot = a->fd; // Right son become the pivot
+    AVL* pivot = a->fd; // Right child becomes the pivot
     // Save balance factor of a and pivot
     int eq_a = a->eq;
     int eq_p = pivot->eq;
-    a->fd = pivot->fg; //  The left subtree of the pivot becomes the right son
-    pivot->fg = a; // a becomes the left son of the pivot
-    // update balance factor
+    a->fd = pivot->fg; //  The left subtree of the pivot becomes the right child
+    pivot->fg = a; // A becomes the left son of the pivot
+    // Update balance factor
     a->eq = eq_a - max(eq_p, 0) - 1;
     pivot->eq = min3(eq_a - 2, eq_a + eq_p - 2, eq_p - 1);
     return pivot; //  pivot becomes the new root of this subtree
+}
 
 // Function rotation right
 AVL* rotationRight(AVL* a){
@@ -84,7 +85,7 @@ AVL* equilibreAVL(AVL* a){
     if(a == NULL){
         exit(2);
     }
-    // Cas où l'arbre est déséquilibré à droite
+    // Case when the root is unbalanced
     if(a->eq >= 2){
         if(a->fd == NULL){
             exit(3);
@@ -96,7 +97,7 @@ AVL* equilibreAVL(AVL* a){
             a = doublerotationLeft(a);
         }
     }
-    // Cas où l'arbre est déséquilibré à gauche
+    // Case when the root is unbalanced on left
     else if(a->fg <= -2){
         if(a->fg == NULL){
             exit(4);
@@ -108,39 +109,56 @@ AVL* equilibreAVL(AVL* a){
             a = doublerotationRight(a);
         }
     }
-    // Aucun rééquilibrage nécessaire
+    // No traitement for balance required
     return a;
 }
 
 // Insertion 
 AVL* insererAVL(AVL* a, int e, int* h){
     if(a == NULL){
-        *h = 1; // un noeud seul a une hauteur de 1
+        *h = 1; 
         a = creerAVL(e);
     }
     else if(e < a->value){
-        // Si l'élément est plus petit, insérer à gauche
+        // If the element is shorter, insert on left
         a->fg = insererAVL(a->fg, e, h);
-        *h = -*h; // inverse l'impact de la hauteur
+        *h = -*h; 
     }
     else if(e > a->value){
-        // Si l'élément est plus grand, insérer à droite
+        // If the element is taller, insert on right
         a->fd = insererAVL(a->fd, e, h);
     }
     else{
-        // Elément est déjà présent
-        *h = 0; // la hauteur ne change pas
+        // A duplicate element
+        *h = 0; 
         return a;
     }
-    // MAJ du facteur d'eq et rééquilibrage si nécessaire
-    if(*h != 0){ // si l'insertion a modifié la hauteur
+    // Update of the traitement for balance
+    if(*h != 0){ // If the insertion changed the height of the tree
         a->eq += *h;
         a = equilibreAVL(a);
-        *h = (a->eq == 0) ? 0 : 1; // Maj de la hauteru
+        *h = (a->eq == 0) ? 0 : 1; // Update of the height of the tree
     }
     return a;
 }
 
+// Prefix
+void prefix(AVL* a){
+    if(a != NULL){
+        printf("[%02d]", a->value);
+        infix(a->fg);
+        infix(a->fd);
+    }
+}
+
+// Infix
+void infix(AVL* a){
+    if(a != NULL){
+        infix(a->fg);
+        printf("[%02d]", a->value);
+        infix(a->fd);
+    }
+}
 
 
 // Main function
