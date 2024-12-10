@@ -1,212 +1,141 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct _avl{
-    int value;
-    int eq;
-    struct _avl* fd;
-    struct _avl* fg;
-} AVL;
+typedef struct Station {
+    int id;                // Unique station identifier
+    int capacity;          // Station capacity 
+    int sum_consumption;   // Sum of consumer consumption
+    struct Station* fg;    // Pointer to the left sub tree
+    struct Station* fd;    // Pointer to the right sub tree
+    int eq;                // balance tree
+    int height;            // Tree height
+} Station;
 
-// Result minimum for 2 variables
 int min(int a, int b){
     return(a<b) ? a : b;
 }
 
-// Result minimum for 3 variables
 int min3(int a, int b, int c){
     return min(a, min(b,c));
 }
 
-// Result maximum for 2 variables
 int max(int a, int b){
     return(a>b) ? a : b;
 }
 
-// Result maximum for 3 variables
 int max3(int a, int b, int c){
     return max(a, max(b,c));
 }
 
-// Function to create an AVL
-AVL* createAVL(int v){
-    AVL* new = malloc(sizeof(AVL));
-    if(new == NULL){
+int getHeight(Station* a) {
+    if (a == NULL){
+        return 0;
+    }
+    return 1 + max(getHeight(a->fg), getHeight(a->fd));
+}
+
+int getBalance(Station* a){
+    if (a == NULL){
+        return 0;
+    }
+    return getHeight(a->fd) - getHeight(a->fg);
+}
+
+Station* rotateLeft(Station* a){
+    Station* shaft = a->fd; 
+    int eq_a = a->eq;
+    int eq_p = shaft->eq;
+    a->fd = shaft->fg; 
+    shaft->fg = a; 
+    a->eq = eq_a - max(eq_p, 0) - 1;
+    shaft->eq = min3(eq_a - 2, eq_a + eq_p - 2, eq_p - 1);
+    return shaft; 
+}
+
+Station* rotateRight(Station* a){
+    Station* shaft = a->fg; 
+    int eq_a = a->eq;
+    int eq_p = shaft->eq;
+    a->fg = shaft->fd; 
+    shaft->fg = a; 
+    a->eq = eq_a - max(eq_p, 0) - 1;
+    shaft->eq = min3(eq_a - 2, eq_a + eq_p - 2, eq_p - 1);
+    return shaft; 
+}
+
+Station* doublerotationLeft(Station* a){
+    a->fd = rotateRight(a->fd);
+    return rotateLeft(a);
+}
+
+Station* doublerotationRight(Station* a){
+    a->fg = rotateLeft(a->fg);
+    return rotateRight(a);
+}
+
+Station* createStation(int id, int capacity, int sum_consumption){
+    Station* newStation = malloc(sizeof(Station));
+    if(newStation == NULL){
         exit(1);
     }
-    new->value = v;
-    new->fd = new->fg = NULL;
-    new->eq = 0; // Balance factor initialited to 0
-    return new;
+    newStation->id = id;                            // Unique station identifier
+    newStation->capacity = capacity;                // Station capacity in kWh
+    newStation->sum_consumption = sum_consumption;  // Sum of consumer consumption
+    newStation->fg = newStation->fd = NULL;         // Initialization of sub tree left and right
+    newStation->height = 1;                         // Knot height (always 1 for a new node)
+    newStation->eq = 0;                             // Initial balance tree (always 0 at the beginning)
+    return newStation;                              // return the pointer to the new node 
 }
 
-// Function rotation left
-AVL* rotationLeft(AVL* a){
-    AVL* pivot = a->fd; // Right child becomes the pivot
-    // Save balance factor of a and pivot
-    int eq_a = a->eq;
-    int eq_p = pivot->eq;
-    a->fd = pivot->fg; //  The left subtree of the pivot becomes the right child
-    pivot->fg = a; // A becomes the left son of the pivot
-    // Update balance factor
-    a->eq = eq_a - max(eq_p, 0) - 1;
-    pivot->eq = min3(eq_a - 2, eq_a + eq_p - 2, eq_p - 1);
-    return pivot; //  pivot becomes the new root of this subtree
-}
-
-// Function rotation right
-AVL* rotationRight(AVL* a){
-    AVL* pivot = a->fg; // left son become the pivot
-    // Save balance factor of a and pivot   
-    int eq_a = a->eq;
-    int eq_p = pivot->eq;
-    a->fg = pivot->fd; //The right subtree of the pivot becomes the left son
-    pivot->fd = a; // a becomes the right son of the pivot
-    // update balance factor
-    a->eq = eq_a - max(eq_p, 0) + 1;
-    pivot->eq = min3(eq_a + 2, eq_a + eq_p + 2, eq_p + 1);
-    return pivot; //  pivot becomes the new root of this subtree
-}
-
-// Double left rotation 
-AVL* doublerotationLeft(AVL* a){
-    a->fd = rotationRight(a->fd);
-    return rotationLeft(a);
-}
-
-// Double right rotation 
-AVL* doublerotationRight(AVL* a){
-    a->fg = rotationLeft(a->fg);
-    return rotationRight(a);
-}
-
-// balance 
-AVL* equilibreAVL(AVL* a){
+Station* balance(Station* a, int id){
     if(a == NULL){
         exit(2);
     }
-    // Case when the root is unbalanced
-    if(a->eq >= 2){
+    if(a->eq >= 2){                                 // Case when tree is unbalanced on the right side
         if(a->fd == NULL){
             exit(3);
         }
         if(a->fd->eq >= 0){
-            a = rotationLeft(a);
+            a = rotateLeft(a);
         }
         else{
             a = doublerotationLeft(a);
         }
     }
-    // Case when the root is unbalanced on left
-    else if(a->fg <= -2){
+    else if(a->fg <= -2){                           // Case when tree is unbalanced on the left side
         if(a->fg == NULL){
             exit(4);
         }
         if(a->fg->eq <= 0){
-            a = rotationRight(a);
+            a = rotateRight(a);
         }
         else{
             a = doublerotationRight(a);
         }
     }
-    // No traitement for balance required
-    return a;
+    return a;                                       // No balance traitement required
 }
 
-// Insertion 
-AVL* insererAVL(AVL* a, int e, int* h){
+Station* insertStation(Station* a, int id, int capacity, int sum_consumption, int* h){
     if(a == NULL){
-        *h = 1; 
-        a = creerAVL(e);
+        *h = 1;                                     // Node has a height of 1
+        a = createStation(id, capacity, sum_consumption);
     }
-    else if(e < a->value){
-        // If the element is shorter, insert on left
-        a->fg = insererAVL(a->fg, e, h);
+    else if(id < a->id){                            // If the element is shorter, insert on left
+        a->fg = insererAVL(a->fg, id, capacity, sum_consumption, h);
         *h = -*h; 
     }
-    else if(e > a->value){
-        // If the element is taller, insert on right
-        a->fd = insererAVL(a->fd, e, h);
+    else if(id > a->id){                            // If the element is taller, insert on right
+        a->fd = insererAVL(a->fd, id, capacity, sum_consumption, h);
     }
-    else{
-        // A duplicate element
-        *h = 0; 
+    else{                                           // Element is already here
+        *h = 0;                                     // The height doesn't change
         return a;
     }
-    // Update of the traitement for balance
-    if(*h != 0){ // If the insertion changed the height of the tree
+    if(*h != 0){                                    // Update of balance if it's necessary
         a->eq += *h;
-        a = equilibreAVL(a);
-        *h = (a->eq == 0) ? 0 : 1; // Update of the height of the tree
+        a = balance(a, id);
+        *h = (a->eq == 0) ? 0 : 1;                  // Update height
     }
     return a;
-}
-
-// Prefix
-void prefix(AVL* a){
-    if(a != NULL){
-        printf("[%02d]", a->value);
-        infix(a->fg);
-        infix(a->fd);
-    }
-}
-
-// Infix
-void infix(AVL* a){
-    if(a != NULL){
-        infix(a->fg);
-        printf("[%02d]", a->value);
-        infix(a->fd);
-    }
-}
-
-
-// Main function
-int main() {
-    AVL* arbre = NULL;  // Root of the AVL tree
-    int h = 0;    // Height adjustment flag
-    int value;         // To hold values during insertion/removal
-
-    // Step 1: Load data from a file or standard input
-    printf("Loading data from 'filtered_data.dat'...\n");
-    FILE* fichier = fopen("filtered_data.dat", "r");
-    if (fichier == NULL) {
-        perror("Error opening file");
-        return EXIT_FAILURE;
-    }
-
-    // Insert data into AVL tree
-    char line[256];
-    while (fgets(line, sizeof(line), fichier)) {
-        // Parse each line (format: ID,Name,Score)
-        int id, score;
-        char name[50];
-        if (sscanf(line, "%d,%49[^,],%d", &id, name, &score) == 3) {
-            printf("Inserting ID %d (Name: %s, Score: %d) into AVL...\n", id, name, score);
-            arbre = insererAVL(arbre, id, &h);
-        } else {
-            fprintf(stderr, "Invalid line format: %s", line);
-        }
-    }
-    fclose(fichier);
-
-    // Step 2: Display the tree (In-Order Traversal)
-    printf("\nAVL Tree (In-Order Traversal):\n");
-    parcoursInOrder(arbre);
-    printf("\n");
-
-    // Step 3: Remove an element from the AVL tree
-    printf("Removing an element from the AVL tree...\n");
-    printf("Enter the ID to remove: ");
-    scanf("%d", &value);
-    arbre = suppressionAVL(arbre, value, &h);
-    printf("Updated AVL Tree (In-Order Traversal):\n");
-    parcoursInOrder(arbre);
-    printf("\n");
-
-    // Step 4: Free the tree memory
-    printf("Freeing the AVL tree memory...\n");
-    libererArbre(arbre);
-
-    return EXIT_SUCCESS;
 }
