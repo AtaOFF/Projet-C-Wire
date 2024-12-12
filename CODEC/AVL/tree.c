@@ -1,14 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "tree.h"
 
-typedef struct Station {
-    struct Station* leftSon;    
-    struct Station* rightSoon;  
-    int balance;   
-    int id;      
-    long load;          
-    long capacity;           
-} Station;
+
 
 int min(int a, int b){
     return(a<b) ? a : b;
@@ -42,7 +34,7 @@ Station * createNode(){
 }
 
 Station * createStation(long capacity, int id){
-    pAvl new = createNode();
+    Station *new = createNode();
     new->capacity = capacity;
     new->id = id;
     return new;

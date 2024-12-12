@@ -20,23 +20,23 @@ int getBalance(Station* a){
 
 Station* rotateLeft(Station* a){
     Station* pivot = a->rightSon; 
-    int eq_a = a->eq;
-    int eq_p = pivot->eq;
+    int eq_a = a->balance;
+    int eq_p = pivot->balance;
     a->rightSon = pivot->leftSon; 
     pivot->leftSon = a; 
-    a->eq = eq_a - max(eq_p, 0) - 1;
-    pivot->eq = min3(eq_a - 2, eq_a + eq_p - 2, eq_p - 1);
+    a->balance = eq_a - max(eq_p, 0) - 1;
+    pivot->balance = min3(eq_a - 2, eq_a + eq_p - 2, eq_p - 1);
     return pivot; 
 }
 
 Station* rotateRight(Station* a){
     Station* pivot = a->leftSon; 
-    int eq_a = a->eq;
-    int eq_p = pivot->eq;
+    int eq_a = a->balance;
+    int eq_p = pivot->balance;
     a->leftSon = pivot->rightSon; 
     pivot->leftSon = a; 
-    a->eq = eq_a - max(eq_p, 0) - 1;
-    pivot->eq = min3(eq_a - 2, eq_a + eq_p - 2, eq_p - 1);
+    a->balance = eq_a - max(eq_p, 0) - 1;
+    pivot->balance = min3(eq_a - 2, eq_a + eq_p - 2, eq_p - 1);
     return pivot; 
 }
 
@@ -55,11 +55,11 @@ Station* balance(Station* a, int id){
     if(a == NULL){
         exit(2);
     }
-    if(a->eq >= 2){                                
+    if(a->balance >= 2){                                
         if(a->rightSon == NULL){
             exit(3);
         }
-        if(a->rightSon->eq >= 0){
+        if(a->rightSon->balance >= 0){
             a = rotateLeft(a);
         }
         else{
@@ -70,7 +70,7 @@ Station* balance(Station* a, int id){
         if(a->leftSon == NULL){
             exit(4);
         }
-        if(a->leftSon->eq <= 0){
+        if(a->leftSon->balance <= 0){
             a = rotateRight(a);
         }
         else{
@@ -80,8 +80,3 @@ Station* balance(Station* a, int id){
     return a;                                       
 }
 
-
-int somme (int a, int b){
-    int somme = a + b;
-    return somme;
-}
