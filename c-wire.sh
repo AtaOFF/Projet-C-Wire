@@ -20,12 +20,10 @@ display_help() {
     echo "  The following combinations are forbidden:"
     echo "  - hvb all, hva all, hvb indiv, hva indiv"
     echo ""
-    echo "Example usage:"
-    echo "  $0 data.csv hvb comp 1"
 }
 
 if [[ "$1" == "-h" ]]; then
-  ./help.sh
+  display_help
   exit 0
 fi
 
@@ -45,7 +43,7 @@ if [ ! -x "$FILE_C" ]; then
     exit 1
 fi
 
-A=$(date+%s.%N)
+A=$(date +%s.%N)
 
 ./code
 
@@ -55,12 +53,12 @@ fi
 
 if [[ "$1" == "hvb" ]] && [[ "$2" == "indiv" ]]; then
   echo "Erreur : les stations HV-B ne peuvent pas avoir de particuliers comme consommateurs."
-  ./help.sh
+  display_help
 fi
 
 if [[ "$1" == "hvb" ]] && [[ "$2" == "all" ]]; then
   echo "Erreur : les stations HV-B ne peuvent pas avoir tous les types de consommateurs."
-  ./help.sh
+  display_help
 fi
 
 if [[ "$1" == "hva" ]] && [[ "$2" == "comp" ]]; then
@@ -69,12 +67,11 @@ fi
 
 if [[ "$1" == "hva" ]] && [[ "$2" == "indiv" ]]; then
   echo "Erreur : les stations HV-A ne peuvent pas avoir de particuliers comme consommateurs."
-  ./help.sh
-fi
+  display_help
 
 if [[ "$1" == "hva" ]] && [[ "$2" == "all" ]]; then
   echo "Erreur : les stations HV-A ne peuvent pas avoir tous les types de consommateurs."
-  ./help.sh
+  display_help
 fi
 
 if [[ "$1" == "lv" ]] && [[ "$2" == "comp" ]]; then
@@ -89,14 +86,14 @@ if [[ "$1" == "lv" ]] && [[ "$2" == "all" ]]; then
   awk -F';' '$2 != "-" && $4 == "-" && $7 == "-" || $2 != "-" && $3 == "-" && $4 == "-" && $5 == "-" && $6 == "-"' "cwire.dat" | cut -d';' -f2,5,7,8 | tr '-' '0' | ./projet
 fi
 
-xs
+
 # Vérification des options
 if [[ -z "$1" || -z "$2" || -z "$3" ]]; then
   echo "Erreur : il manque des paramètres."
-  ./help.sh
+  display_help
   exit 1
 fi
 
 B=$(date +%s.%N)
-
-echo"$B-$A" |bc
+diff=$(echo "$B - $A" | bc)
+echo "Temps écoulé : $diff secondes"
