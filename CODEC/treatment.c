@@ -1,8 +1,7 @@
 #include "treatment.h"
-#include "tree.h"
+#include "transfer.h"
 #include "balance.h"
-
-
+#include "tree.h"
 
 
 Station* insertStation(Station* a, int id, long capacity,  int* h){
@@ -29,4 +28,17 @@ Station* insertStation(Station* a, int id, long capacity,  int* h){
     return a;
 }
 
+
+Station * updateStation(Station * a, int id, long load) {
+    Station * station;
+    int h = 0;
+    int result = search(a, id, &station);
+    if (!result) {
+        a = insertStation(a, id, 0, &h);
+    } else {
+        station->load += load;
+    }
+
+    return a;
+}
 

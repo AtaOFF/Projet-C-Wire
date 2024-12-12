@@ -39,3 +39,19 @@ Station * createStation(long capacity, int id){
     new->id = id;
     return new;
 }
+
+int search(Station* a, int id, Station* *searched) {
+    if (a == NULL) { 
+        *searched = a;
+        return 0;
+    }
+    if (a->id == id) { 
+        *searched = a;
+        return 1;
+    }
+    if (id < a->id) {
+        return search(a->leftSon, id, searched);
+    } else {
+        return search(a->rightSon, id, searched);
+    }
+} 

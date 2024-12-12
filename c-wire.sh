@@ -1,7 +1,4 @@
-FILE_DAT="data_cwire.dat"
-FILE_TEMP="filtered_data.dat" # temp file with filtered data
-FILE_C="./code" # path to the compiled C executable
-OUTPUT_FILE="result.txt" # file to show C program results (can be modified in the future to a graphic file)
+
 
 #!/bin/bash
 
