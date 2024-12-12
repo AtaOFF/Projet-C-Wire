@@ -43,6 +43,7 @@ if [ ! -x "$FILE_C" ]; then
     exit 1
 fi
 
+//timer 
 A=$(date +%s.%N)
 
 ./code

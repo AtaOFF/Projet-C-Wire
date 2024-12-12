@@ -29,20 +29,3 @@ Station* insertStation(Station* a, int id, long capacity,  int* h){
 }
 
 
-void ProcessFile (const char *filename, Station * a, int *h){
-    File *file=fopen(filename, "r");
-    if(file==NULL){
-        printf("Unable to open file %s.\n");
-        exit(1);
-    }
-
-    char * buffer= malloc(SIZE * sizeof(char)); // buffer=tampon
-    if(buffer==NULL){
-        
-    }
-    while (fgets(buffer, SIZE, file)) {
-    ...
-}
-
-}
- 
