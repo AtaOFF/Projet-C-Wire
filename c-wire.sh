@@ -5,23 +5,23 @@ OUTPUT_FILE="result.txt" # file to show C program results (can be modified in th
 
 #!/bin/bash
 
-# Fonction d'aide pour expliquer les options du script principal
-help_function() {
-    echo -e "\n=== AIDE : Utilisation du script ==="
-    echo -e "\nCommandes disponibles :"
-    echo -e "  ./script.sh <type_station> <type_consommateur>"
-    echo -e "\nParamètres :"
-    echo -e "  <type_station> : Type de la station électrique. Les valeurs possibles sont :"
-    echo -e "    - hvb : Haute tension B"
-    echo -e "    - hva : Haute tension A"
-    echo -e "    - lv  : Basse tension (Low Voltage)"
-    echo -e "\n  <type_consommateur> : Type du consommateur. Les valeurs possibles sont :"
-    echo -e "    - comp  : Consommateur commercial"
-    echo -e "    - indiv : Consommateur individuel"
-    echo -e "    - all   : Tous les types de consommateurs"
-    echo -e "\nOptions spéciales :"
-    echo -e "  -h : Affiche cette aide."
-
+# Function: Display help
+display_help() {
+    echo "Usage: $0 <path_to_CSV_file> <station_type> <consumer_type> [central_id] [-h]"
+    echo ""
+    echo "Parameter descriptions:"
+    echo "  <path_to_CSV_file>   Path to the CSV file containing the data (required)."
+    echo "  <station_type>       Type of station to process: hvb, hva, lv (required)."
+    echo "  <consumer_type>      Type of consumer: comp (business), indiv (individual), all (all) (required)."
+    echo "  [central_id]         ID of a specific station (optional)."
+    echo "  -h                   Display this help and ignore all other parameters (optional)."
+    echo ""
+    echo "Restrictions:"
+    echo "  The following combinations are forbidden:"
+    echo "  - hvb all, hva all, hvb indiv, hva indiv"
+    echo ""
+    echo "Example usage:"
+    echo "  $0 data.csv hvb comp 1"
 }
 
 if [[ "$1" == "-h" ]]; then
@@ -89,7 +89,7 @@ if [[ "$1" == "lv" ]] && [[ "$2" == "all" ]]; then
   awk -F';' '$2 != "-" && $4 == "-" && $7 == "-" || $2 != "-" && $3 == "-" && $4 == "-" && $5 == "-" && $6 == "-"' "cwire.dat" | cut -d';' -f2,5,7,8 | tr '-' '0' | ./projet
 fi
 
-
+xs
 # Vérification des options
 if [[ -z "$1" || -z "$2" || -z "$3" ]]; then
   echo "Erreur : il manque des paramètres."
