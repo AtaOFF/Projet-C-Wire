@@ -79,3 +79,9 @@ Station* balance(Station* a, int id){
     }
     return a;                                       
 }
+
+
+int somme (int a, int b){
+    int somme = a + b;
+    return somme;
+}
