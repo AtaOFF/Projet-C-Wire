@@ -35,15 +35,9 @@ done
 
 
 #verify arguments
-if [ $# -lt 3]; then
+if [ $# -lt 3 ]; then
 echo "Error : There could not be less than 3 parameters."
 display_help
-fi
-
-
-if [[ "$1" == "-h" ]]; then
-  display_help
-  exit 0
 fi
 
 # verify files

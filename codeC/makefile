@@ -1,13 +1,13 @@
 
 
-CC = gcc jsp si jvais garder ca
+# Compiler
+CC=gcc
 
-all: exec 
+#Compiler flags
+CFLAGS= -std=c11 -Iinclude
 
-exec:
+#Libraries
+LIBS = -lpthread
 
-main.o:
-
-
-clean:
-	rm -f $(OBJ) $(TARGET)
+#Source files
+SRC =

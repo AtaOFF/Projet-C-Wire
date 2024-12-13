@@ -1,7 +1,7 @@
 #include "tree.h"
 #include "balance.h"
 #include "tratment.h"
-#include "transfer.h" 
+#include "transfer.h"
 
 
 void fprintAVL(Station *a, FILE *file) {
