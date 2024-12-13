@@ -24,17 +24,29 @@ display_help() {
 }
 
 
-#timer 
+#Start timer 
 A=$(date +%s.%N)
 
 
-#Verify if help command is requested. If yes, display_help is called. Otherwise, do nothing.
+#Check if help command is requested. If yes, display_help is called. Otherwise, do nothing.
 for arg in "$@"; do
 if [ "$arg" == "-h" ]; then
 display_help
 break
 fi
 done
+
+
+#Check if the first argument is the path to the CSV file.
+if [[ -z "$1" || ! -f "$1" || "$1" != *.csv ]]; then
+echo "Error : The first parameter is invalid."
+display_help
+fi
+
+
+
+
+
 
 
 
