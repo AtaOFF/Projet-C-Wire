@@ -24,6 +24,10 @@ display_help() {
 }
 
 
+#timer 
+A=$(date +%s.%N)
+
+
 #Verify if help command is requested. If yes, display_help is called. Otherwise, do nothing.
 for arg in "$@"; do
 if [ "$arg" == "-h" ]; then
@@ -34,17 +38,13 @@ done
 
 
 
+
 #verify arguments
 if [ $# -lt 3]; then
 echo "Error : There could not be less than 3 parameters."
 display_help
 fi
 
-
-if [[ "$1" == "-h" ]]; then
-  display_help
-  exit 0
-fi
 
 # verify files
 if [ ! -f "$FILE_DAT" ]; then
@@ -62,10 +62,6 @@ if [ ! -x "$FILE_C" ]; then
     exit 1
 fi
 
-#timer 
-A=$(date +%s.%N)
-
-./code
 
 if [[ "$1" == "hvb" ]] && [[ "$2" == "comp" ]]; then
   awk -F';' '$2 != "-" && $4 == "-" && $7 == "-" || $2 != "-" && $3 == "-" && $4 == "-" && $5 == "-" && $6 == "-"' "cwire.dat" | cut -d';' -f2,5,7,8 | tr '-' '0' | ./projet
@@ -116,3 +112,5 @@ fi
 B=$(date +%s.%N)
 diff=$(echo "$B - $A" | bc)
 echo "Elapsed time : $diff seconds"
+
+./codeC
