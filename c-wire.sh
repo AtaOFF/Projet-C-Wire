@@ -1,4 +1,8 @@
 
+FILE_DAT="data_cwire.dat"
+FILE_TEMP="filtered_data.dat" # temp file with filtered data
+FILE_C="./code" # path to the compiled C executable
+OUTPUT_FILE="result.txt" # file to show C program results (can be modified in the future to a graphic file)
 
 #!/bin/bash
 
@@ -24,7 +28,7 @@ if [[ "$1" == "-h" ]]; then
   exit 0
 fi
 
-# Check files
+# verify files
 if [ ! -f "$FILE_DAT" ]; then
     echo "Error : File $FILE_DAT does not exist or is not accessible."
     exit 1
@@ -84,7 +88,7 @@ if [[ "$1" == "lv" ]] && [[ "$2" == "all" ]]; then
 fi
 
 
-# Cheking options
+# verify options
 if [[ -z "$1" || -z "$2" || -z "$3" ]]; then
   echo "Error : Missing parameters."
   display_help
