@@ -23,6 +23,24 @@ display_help() {
     echo ""
 }
 
+
+#Verify if help command is requested. If yes, display_help is called. Otherwise, do nothing.
+for arg in "$@"; do
+if [ "$arg" == "-h" ]; then
+display_help
+break
+fi
+done
+
+
+
+#verify arguments
+if [ $# -lt 3]; then
+echo "Error : There could not be less than 3 parameters."
+display_help
+fi
+
+
 if [[ "$1" == "-h" ]]; then
   display_help
   exit 0
