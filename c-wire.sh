@@ -40,7 +40,7 @@ if [ ! -x "$FILE_C" ]; then
     exit 1
 fi
 
-//timer 
+#timer 
 A=$(date +%s.%N)
 
 ./code
@@ -50,12 +50,12 @@ if [[ "$1" == "hvb" ]] && [[ "$2" == "comp" ]]; then
 fi
 
 if [[ "$1" == "hvb" ]] && [[ "$2" == "indiv" ]]; then
-  echo "Erreur : les stations HV-B ne peuvent pas avoir de particuliers comme consommateurs."
+  echo "Error : HV-B stations can not have individuals as consumers."
   display_help
 fi
 
 if [[ "$1" == "hvb" ]] && [[ "$2" == "all" ]]; then
-  echo "Erreur : les stations HV-B ne peuvent pas avoir tous les types de consommateurs."
+  echo "Error : HV-B stations can not have all type of consumers."
   display_help
 fi
 
@@ -64,12 +64,11 @@ if [[ "$1" == "hva" ]] && [[ "$2" == "comp" ]]; then
 fi
 
 if [[ "$1" == "hva" ]] && [[ "$2" == "indiv" ]]; then
-  echo "Erreur : les stations HV-A ne peuvent pas avoir de particuliers comme consommateurs."
+  echo "Error : HV-A stations can not have individuals as consumers."
   display_help
 
 if [[ "$1" == "hva" ]] && [[ "$2" == "all" ]]; then
-  echo "Erreur : les stations HV-A ne peuvent pas avoir tous les types de consommateurs."
-  display_help
+  echo "Error : HV-A stations can not have all type of consumers."
 fi
 
 if [[ "$1" == "lv" ]] && [[ "$2" == "comp" ]]; then
@@ -85,13 +84,13 @@ if [[ "$1" == "lv" ]] && [[ "$2" == "all" ]]; then
 fi
 
 
-# Vérification des options
+# Cheking options
 if [[ -z "$1" || -z "$2" || -z "$3" ]]; then
-  echo "Erreur : il manque des paramètres."
+  echo "Error : Missing parameters."
   display_help
   exit 1
 fi
 
 B=$(date +%s.%N)
 diff=$(echo "$B - $A" | bc)
-echo "Temps écoulé : $diff secondes"
+echo "Elapsed time : $diff seconds"
