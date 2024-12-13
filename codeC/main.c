@@ -1,7 +1,7 @@
-#include "balance.h"
-#include "transfer.h"
-#include "treatment.h"
 #include "tree.h"
+#include "balance.h"
+#include "tratment.h"
+#include "transfer.h" 
 
 int main(int argc, char *argv[]){
 

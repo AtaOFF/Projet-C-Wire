@@ -1,6 +1,7 @@
 #include "tree.h"
-
-
+#include "balance.h"
+#include "tratment.h"
+#include "transfer.h"
 
 int min(int a, int b){
     return(a<b) ? a : b;

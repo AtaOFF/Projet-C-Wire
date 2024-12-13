@@ -1,7 +1,7 @@
-#include "treatment.h"
-#include "transfer.h"
-#include "balance.h"
 #include "tree.h"
+#include "balance.h"
+#include "tratment.h"
+#include "transfer.h"
 
 
 Station* insertStation(Station* a, int id, long capacity,  int* h){

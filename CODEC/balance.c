@@ -1,7 +1,7 @@
-#include "treatment.h"
 #include "tree.h"
 #include "balance.h"
-
+#include "tratment.h"
+#include "transfer.h" 
 
 
 int getHeight(Station* a) {
