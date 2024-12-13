@@ -24,7 +24,11 @@ display_help() {
 }
 
 
-#Verify if help command is requested. If yes, display_help is called. Otherwise, do nothing.
+#Start timer 
+A=$(date +%s.%N)
+
+
+#Check if help command is requested. If yes, display_help is called. Otherwise, do nothing.
 for arg in "$@"; do
 if [ "$arg" == "-h" ]; then
 display_help
@@ -33,11 +37,30 @@ fi
 done
 
 
+#Check if the first argument is the path to the CSV file.
+if [[ -z "$1" || ! -f "$1" || "$1" != *.csv ]]; then
+echo "Error : The first parameter is invalid."
+display_help
+fi
+
+
+
+
+
+
+
+
 
 #verify arguments
 if [ $# -lt 3 ]; then
 echo "Error : There could not be less than 3 parameters."
 display_help
+fi
+
+
+if [[ "$1" == "-h" ]]; then
+  display_help
+  exit 0
 fi
 
 # verify files
@@ -56,10 +79,6 @@ if [ ! -x "$FILE_C" ]; then
     exit 1
 fi
 
-#timer 
-A=$(date +%s.%N)
-
-./code
 
 if [[ "$1" == "hvb" ]] && [[ "$2" == "comp" ]]; then
   awk -F';' '$2 != "-" && $4 == "-" && $7 == "-" || $2 != "-" && $3 == "-" && $4 == "-" && $5 == "-" && $6 == "-"' "cwire.dat" | cut -d';' -f2,5,7,8 | tr '-' '0' | ./projet
@@ -110,3 +129,5 @@ fi
 B=$(date +%s.%N)
 diff=$(echo "$B - $A" | bc)
 echo "Elapsed time : $diff seconds"
+
+./codeC
