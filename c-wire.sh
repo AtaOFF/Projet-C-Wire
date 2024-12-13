@@ -26,17 +26,17 @@ fi
 
 # Check files
 if [ ! -f "$FILE_DAT" ]; then
-    echo "Error : File $FILE_DAT does not exist or is not accessible"
+    echo "Error : File $FILE_DAT does not exist or is not accessible."
     exit 1
 fi
 
 if [ ! -r "$FILE_C" ]; then
-    echo "Error : File $FILE_C does not have read permissions"
+    echo "Error : File $FILE_C does not have read permissions."
     exit 1
 fi
 
 if [ ! -x "$FILE_C" ]; then
-    echo "Error : File $FILE_C is not executable"
+    echo "Error : File $FILE_C is not executable."
     exit 1
 fi
 
