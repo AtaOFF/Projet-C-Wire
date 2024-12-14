@@ -9,7 +9,7 @@ OUTPUT_FILE="result.txt" # file to show C program results (can be modified in th
 display_help() {
     echo "Usage: ./c-wire.sh [ARG] [OPTION]"
     echo "Arguments:"
-    echo "  ARG[0]  Path to the CSV file containing the data *required*"
+    echo "  ARG[0] Path to the CSV file containing the data *required*"
     echo "  ARG[1] Station type (HVB, HVA, LV) *required*"
     echo "  ARG[2] Consumer type: comp (business), indiv (individual), all (all) *required*"
     echo "  ARG[3] Number of power plant *optional*"
