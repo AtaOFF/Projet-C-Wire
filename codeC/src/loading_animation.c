@@ -1,6 +1,4 @@
-#include "waiting_scene.h"
-
-
+#include "loading_animation.h"
 #include <pthread.h>
 #include <ncurses.h>
 #include <unistd.h>
