@@ -10,7 +10,8 @@ CFLAGS= -std=c11 -Iinclude
 LIBS = -lpthread
 
 #Source files
-SRC =src/main.c src/tree.c src/balance.c src/treatment.c src/transfer.c
+SRC =src/main.c src/tree.c src/balance.c src/treatment.c src/avl_to_csv.c 
+     src/capacity_sort.c src/loading_animation.c  
 
 #Object files
 OBJ = $(SRC:.c=.o)
