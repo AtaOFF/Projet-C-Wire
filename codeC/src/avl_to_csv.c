@@ -1,7 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include "common.h"
+#include "avl_to_csv.h"
+
 
 // Function to collect AVL data into an array (in-order traversal)
 void collectAVLData(Station *a, StationResult **results, int *index) {
