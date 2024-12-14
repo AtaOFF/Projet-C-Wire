@@ -23,7 +23,6 @@ display_help() {
     echo ""
 }
 
-
 #Start timer 
 A=$(date +%s.%N)
 
@@ -32,36 +31,72 @@ A=$(date +%s.%N)
 for arg in "$@"; do
 if [ "$arg" == "-h" ]; then
 display_help
-break
+exit 0
 fi
 done
 
 
-#Check if the first argument is the path to the CSV file.
-if [[ -z "$1" || ! -f "$1" || "$1" != *.csv ]]; then
-echo "Error : The first parameter is invalid."
-display_help
-fi
-
-
-
-
-
-
-
-
-
-#verify arguments
-if [ $# -lt 3 ]; then
-echo "Error : There could not be less than 3 parameters."
-display_help
-fi
-
-
-if [[ "$1" == "-h" ]]; then
+#Check required parameters
+if [[ -z "$1" || -z "$2" || -z "$3" ]]; then
+  echo "Error : Missing parameters."
   display_help
-  exit 0
+  exit 1
 fi
+
+#Check if the first parameter is the good path to the CSV file.
+if [[ ! -f "$1" || "$1" != *.csv ]]; then
+echo "Error : The first parameter must be a valid path to an existing .csv file. "
+display_help
+exit 1
+fi
+
+
+#Check if the second parameter is a type of station.
+if [[ "$2" != "hva" && "$2" != "hvb" && "$2" != "lv" ]]; then
+echo "Error : The second parameter must be a type of station."
+display_help
+exit 1
+fi
+
+
+#Check if the third parameter is a type of consumer.
+if [[ "$3" != "comp" && "$3" != "indiv" && "$3" != "all" ]]; then
+echo "Error : The third parameter must be a type of consumer."
+display_help
+exit 1
+fi
+
+
+#Check the 4 prohibited combinations
+if [[ "$2" == "hvb" && "$3" == "all" ]]; then
+echo "Error : HV-B stations can not have all type of consumers."
+display_help
+exit 1
+fi
+
+if [[ "$2" == "hvb" && "$3" == "indiv" ]]; then
+echo "Error : HV-B stations can not have individuals as consumers."
+display_help
+exit 1
+fi
+
+if [[ "$2" == "hva"  && "$3" == "indiv" ]]; then
+echo "Error : HV-A stations can not have individuals as consumers."
+display_help
+exit 1
+fi
+
+if [[ "$2" == "hva" &&  "$3" == "all" ]]; then
+echo "Error : HV-A stations can not have all type of consumers."
+display_help
+exit 1
+fi
+
+
+
+
+
+
 
 # verify files
 if [ ! -f "$FILE_DAT" ]; then
@@ -80,31 +115,19 @@ if [ ! -x "$FILE_C" ]; then
 fi
 
 
+
+
 if [[ "$1" == "hvb" ]] && [[ "$2" == "comp" ]]; then
   awk -F';' '$2 != "-" && $4 == "-" && $7 == "-" || $2 != "-" && $3 == "-" && $4 == "-" && $5 == "-" && $6 == "-"' "cwire.dat" | cut -d';' -f2,5,7,8 | tr '-' '0' | ./projet
 fi
 
-if [[ "$1" == "hvb" ]] && [[ "$2" == "indiv" ]]; then
-  echo "Error : HV-B stations can not have individuals as consumers."
-  display_help
-fi
 
-if [[ "$1" == "hvb" ]] && [[ "$2" == "all" ]]; then
-  echo "Error : HV-B stations can not have all type of consumers."
-  display_help
-fi
 
 if [[ "$1" == "hva" ]] && [[ "$2" == "comp" ]]; then
   awk -F';' '$2 != "-" && $4 == "-" && $7 == "-" || $2 != "-" && $3 == "-" && $4 == "-" && $5 == "-" && $6 == "-"' "cwire.dat" | cut -d';' -f2,5,7,8 | tr '-' '0' | ./projet
 fi
 
-if [[ "$1" == "hva" ]] && [[ "$2" == "indiv" ]]; then
-  echo "Error : HV-A stations can not have individuals as consumers."
-  display_help
 
-if [[ "$1" == "hva" ]] && [[ "$2" == "all" ]]; then
-  echo "Error : HV-A stations can not have all type of consumers."
-fi
 
 if [[ "$1" == "lv" ]] && [[ "$2" == "comp" ]]; then
   awk -F';' '$2 != "-" && $4 == "-" && $7 == "-" || $2 != "-" && $3 == "-" && $4 == "-" && $5 == "-" && $6 == "-"' "cwire.dat" | cut -d';' -f2,5,7,8 | tr '-' '0' | ./projet
@@ -119,12 +142,6 @@ if [[ "$1" == "lv" ]] && [[ "$2" == "all" ]]; then
 fi
 
 
-# verify options
-if [[ -z "$1" || -z "$2" || -z "$3" ]]; then
-  echo "Error : Missing parameters."
-  display_help
-  exit 1
-fi
 
 B=$(date +%s.%N)
 diff=$(echo "$B - $A" | bc)
