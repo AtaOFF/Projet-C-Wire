@@ -10,4 +10,26 @@ CFLAGS= -std=c11 -Iinclude
 LIBS = -lpthread
 
 #Source files
-SRC =
+SRC =src/main.c src/tree.c src/balance.c src/treatment.c src/transfer.c
+
+#Object files
+OBJ = $(SRC:.c=.o)
+
+#Executable 
+TARGET = ??
+
+#Default target
+all: $(TARGET)
+
+#Linking the executable
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+clean:
+	rm -f $(OBJ) $(TARGET)
+
+test:
+	./$(TARGET) -test
