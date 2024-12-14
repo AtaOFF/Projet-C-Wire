@@ -19,10 +19,10 @@ void draw_bulb(int on) {
     mvprintw(7, 10, "    \\      //    ");
     mvprintw(8, 10, "     `, Y ,'     ");
     mvprintw(9, 10, "      |_|_|      ");
-    mvprintw(10, 10, "     |===|      ");
-    mvprintw(11, 10, "     |===|      ");
-    mvprintw(12, 10, "     \\_/       ");
-
+    mvprintw(10, 10, "      |===|      ");
+    mvprintw(11, 10, "      |===|      ");
+    mvprintw(12, 10, "       \\_/       ");
+    
     if (on) {
         attroff(COLOR_PAIR(2));
     } else {
