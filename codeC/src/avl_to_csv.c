@@ -3,13 +3,6 @@
 #include <pthread.h>
 #include "common.h"
 
-// Structure to pass data between threads
-typedef struct {
-    Station *root;          
-    StationResult **results; 
-    int *count;             
-} AVLData;
-
 // Function to collect AVL data into an array (in-order traversal)
 void collectAVLData(Station *a, StationResult **results, int *index) {
     if (a != NULL) {
@@ -77,4 +70,58 @@ void transferToCSV(Station *a, const char *filename, const char *header) {
     
     
     free(results);
+}
+
+
+
+
+
+// Function to calculate the absolute difference between capacity and load
+long long calculate_diff(StationResult *station) {
+    return abs(station->capacity - station->load);
+}
+
+// Comparator for sorting stations by absolute difference (ascending order)
+int compare_by_diff(const void *a, const void *b) {
+    StationResult *stationA = *(StationResult **)a;
+    StationResult *stationB = *(StationResult **)b;
+
+    long long diffA = calculate_diff(stationA);
+    long long diffB = calculate_diff(stationB);
+
+    return (diffA > diffB) - (diffA < diffB); // Ascending order
+}
+
+// Function to write the 10 most and least loaded LV stations to a CSV file
+void output_min_max_LV(char *filename, StationResult **results, int count) {
+    FILE *file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Error opening file %s\n", filename);
+        return;
+    }
+
+    fprintf(file, "station_id,capacity,load,absolute_diff\n");
+
+    // Write the 10 most loaded stations
+    for (int i = 0; i < FIRST_MAX && i < count; i++) {
+        fprintf(file, "%d,%lld,%lld,%lld\n",
+                results[i]->id,
+                results[i]->capacity,
+                results[i]->load,
+                calculate_diff(results[i]));
+    }
+
+    fprintf(file, "...\n");
+
+    // Write the 10 least loaded stations
+    for (int i = count - LAST_MIN; i < count; i++) {
+        fprintf(file, "%d,%lld,%lld,%lld\n",
+                results[i]->id,
+                results[i]->capacity,
+                results[i]->load,
+                calculate_diff(results[i]));
+    }
+
+    fclose(file);
+    printf("File %s written successfully.\n", filename);
 }
