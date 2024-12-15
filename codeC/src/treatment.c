@@ -8,22 +8,26 @@ Station* insertStation(Station* a, int id, long capacity,  int* h){
     if(a == NULL){
         *h = 1;                                    
         a = createStation(id, capacity);
+            if (a == NULL){
+                printf("New station creation failed.\n");
+                exit(3);
+            }
     }
-    else if(id < a->id){                           
-        a->leftSon = insertStation(a->leftSon, id, capacity,h);
-        *h = -*h; 
+    else if(id < a -> id){                           
+        a -> leftSon = insertStation(a -> leftSon, id, capacity, h);
+        *h = -(*h); 
     }
-    else if(id > a->id){                            
-        a->rightSon = insertStation(a->rightSon, id, capacity,h);
+    else if(id > a -> id){                            
+        a -> rightSon = insertStation(a -> rightSon, id, capacity, h);
     }
     else{                                           
         *h = 0;                                    
         return a;
     }
     if(*h != 0){                                   
-        a->balance += *h;
+        a -> balance += *h;
         a = balance(a, id);
-        *h = (a->balance == 0) ? 0 : 1;                 
+        *h = (a -> balance == 0) ? 0 : 1;                 
     }
     return a;
 }
@@ -36,7 +40,7 @@ Station * updateStation(Station * a, int id, long load) {
     if (!result) {
         a = insertStation(a, id, 0, &h);
     } else {
-        station->load += load;
+        station -> load += load;
     }
 
     return a;
