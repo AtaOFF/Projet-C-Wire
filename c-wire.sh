@@ -26,7 +26,8 @@ display_help() {
 A=$(date +%s.%N)
 
 
-#Check if help command is requested. If yes, display_help is called. Otherwise, do nothing.
+#Check if help command is requested in the parameters entered. If yes, display_help fonction is called.
+#Otherwise, do nothing.
 for arg in "$@"; do
 if [ "$arg" == "-h" ]; then
 display_help
@@ -35,14 +36,16 @@ fi
 done
 
 
-#Check required parameters
+#Check for required parameters. If one or more are missing, an error message is displayed, 
+#display_help fonction is called and an error code is returned.
 if [[ -z "$1" || -z "$2" || -z "$3" ]]; then
   echo "Error : Missing parameters." >&2
   display_help
   exit 1
 fi
 
-#Check if the first parameter is the good path to the CSV file.
+#Check if the first parameter is the good path to the CSV file. Otherwise, an error message is displayed, 
+#display_help fonction is called and an error code is returned.
 if [[ ! -f "$1" || "$1" != *.csv ]]; then
 echo "Error : The first parameter must be a valid path to an existing .csv file. " >&2
 display_help
@@ -50,7 +53,8 @@ exit 1
 fi
 
 
-#Check if the second parameter is a type of station.
+#Check if the second parameter is a type of station. Otherwise, an error message is displayed, 
+#display_help fonction is called and an error code is returned.
 if [[ "$2" != "hva" && "$2" != "hvb" && "$2" != "lv" ]]; then
 echo "Error : The second parameter must be a type of station." >&2
 display_help
@@ -58,7 +62,8 @@ exit 1
 fi
 
 
-#Check if the third parameter is a type of consumer.
+#Check if the third parameter is a type of consumer. Otherwise, an error message is displayed, 
+#display_help fonction is called and an error code is returned.
 if [[ "$3" != "comp" && "$3" != "indiv" && "$3" != "all" ]]; then
 echo "Error : The third parameter must be a type of consumer." >&2
 display_help
@@ -66,25 +71,33 @@ exit 1
 fi
 
 
-#Check the 4 prohibited combinations
+#Check the 4 prohibited combinations :
+#1. If the first prohibited combination (hvb all) is entered by the user, an error message is displayed, 
+#display_help fonction is called and an error code is returned.
 if [[ "$2" == "hvb" && "$3" == "all" ]]; then
 echo "Error : HV-B stations can not have all type of consumers." >&2
 display_help
 exit 1
 fi
 
+#2. If the second prohibited combination (hvb indiv) is entered by the user, an error message is displayed, 
+#display_help fonction is called and an error code is returned.
 if [[ "$2" == "hvb" && "$3" == "indiv" ]]; then
 echo "Error : HV-B stations can not have individuals as consumers." >&2
 display_help
 exit 1
 fi
 
+#3. If the third prohibited combination (hva indiv) is entered by the user, an error message is displayed, 
+#display_help fonction is called and an error code is returned.
 if [[ "$2" == "hva"  && "$3" == "indiv" ]]; then
 echo "Error : HV-A stations can not have individuals as consumers." >&2
 display_help
 exit 1
 fi
 
+#4. If the fourth prohibited combination (hva all) is entered by the user, an error message is displayed, 
+#display_help fonction is called and an error code is returned.
 if [[ "$2" == "hva" &&  "$3" == "all" ]]; then
 echo "Error : HV-A stations can not have all type of consumers." >&2
 display_help
@@ -92,7 +105,8 @@ exit 1
 fi
 
 
-# verify files
+
+#Check files
 if [ ! -f "$FILE_DAT" ]; then
     echo "Error : File $FILE_DAT does not exist or is not accessible." >&2
     exit 1
@@ -108,33 +122,49 @@ if [ ! -x "$FILE_C" ]; then
     exit 1
 fi
 
-#filtering
-if [[ "$1" == "hvb" ]] && [[ "$2" == "comp" ]]; then
-  awk -F';' '$2 != "-" && $4 == "-" && $7 == "-" || $2 != "-" && $3 == "-" && $4 == "-" && $5 == "-" && $6 == "-"' "cwire.dat" | cut -d';' -f2,5,7,8 | tr '-' '0' | ./projet
+
+
+#Filtering data in the CSV file based on user choice (5 possible combinations) :
+
+#1. Companies linked to an HVB station (hvb comp) :
+#Selection of the collones concerned in the CSV file.
+#Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
+if [[ "$2" == "hvb" ]] && [[ "$3" == "comp" ]]; then
+  awk -F';'  '$1 != "-" && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,2,5,8 | tr '-' '0' | ./projet
+fi
+
+#2. Companies linked to an HVA station (hva comp) :
+#Selection of the collones concerned in the CSV file.
+#Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
+if [[ "$2" == "hva" ]] && [[ "$3" == "comp" ]]; then
+  awk -F';'  '$1 != "-" && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,3,5,8 | tr '-' '0' | ./projet
+fi
+
+#3. Companies linkes to a LV station (lv comp) :
+#Selection of the collones concerned in the CSV file.
+#Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
+if [[ "$2" == "lv" ]] && [[ "$3" == "comp" ]]; then
+  awk -F';'  '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,4,5,8 | tr '-' '0' | ./projet
+fi
+
+#4. Individuals linked to a LV station (lv indiv) :
+#Selection of the collones concerned in the CSV file.
+#Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
+if [[ "$2" == "lv" ]] && [[ "$3" == "indiv" ]]; then
+  awk -F';' '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 == "-" && $6 != "-" && $7 == "-" && $8 != "-"' "cwire.dat" | cut -d';' -f1,4,6,8 | tr '-' '0' | ./projet
+fi
+
+#5. Individuals and companies linked to a LV station (lv all) :
+#Selection of the collones concerned in the CSV file.
+#Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
+if [[ "$2" == "lv" ]] && [[ "$3" == "all" ]]; then
+  awk -F';' '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 != "-" && $7 == "-" && $8 != "-"' "cwire.dat" | cut -d';' -f1,4,5,6,8 | tr '-' '0' | ./projet
 fi
 
 
 
-if [[ "$1" == "hva" ]] && [[ "$2" == "comp" ]]; then
-  awk -F';' '$2 != "-" && $4 == "-" && $7 == "-" || $2 != "-" && $3 == "-" && $4 == "-" && $5 == "-" && $6 == "-"' "cwire.dat" | cut -d';' -f2,5,7,8 | tr '-' '0' | ./projet
-fi
 
-
-
-if [[ "$1" == "lv" ]] && [[ "$2" == "comp" ]]; then
-  awk -F';' '$2 != "-" && $4 == "-" && $7 == "-" || $2 != "-" && $3 == "-" && $4 == "-" && $5 == "-" && $6 == "-"' "cwire.dat" | cut -d';' -f2,5,7,8 | tr '-' '0' | ./projet
-fi
-
-if [[ "$1" == "lv" ]] && [[ "$2" == "indiv" ]]; then
-  awk -F';' '$2 != "-" && $4 == "-" && $7 == "-" || $2 != "-" && $3 == "-" && $4 == "-" && $5 == "-" && $6 == "-"' "cwire.dat" | cut -d';' -f2,5,7,8 | tr '-' '0' | ./projet
-fi
-
-if [[ "$1" == "lv" ]] && [[ "$2" == "all" ]]; then
-  awk -F';' '$2 != "-" && $4 == "-" && $7 == "-" || $2 != "-" && $3 == "-" && $4 == "-" && $5 == "-" && $6 == "-"' "cwire.dat" | cut -d';' -f2,5,7,8 | tr '-' '0' | ./projet
-fi
-
-
-
+#Display elapsed time
 B=$(date +%s.%N)
 diff=$(echo "$B - $A" | bc)
 echo "Elapsed time : $diff seconds"
