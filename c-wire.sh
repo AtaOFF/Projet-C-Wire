@@ -71,6 +71,21 @@ exit 1
 fi
 
 
+
+#Check that the fourth parameter entered, which is the number of plant, if any, is valid.
+#If not, an error message is displayed, display_help fonction is called and an error code is returned.
+if [[ -n "$4"]]; then
+if [[ "$4" != "1" && "$4" != "2" && "$4" != "3" && "$4" != "4" && "$4" != "5" ]]; then
+echo "Error : The fourth parameter must be a valid power plant." >&2
+display_help
+exit 1
+fi
+fi
+
+
+
+
+
 #Check the 4 prohibited combinations :
 #1. If the first prohibited combination (hvb all) is entered by the user, an error message is displayed, 
 #display_help fonction is called and an error code is returned.
@@ -80,6 +95,7 @@ display_help
 exit 1
 fi
 
+
 #2. If the second prohibited combination (hvb indiv) is entered by the user, an error message is displayed, 
 #display_help fonction is called and an error code is returned.
 if [[ "$2" == "hvb" && "$3" == "indiv" ]]; then
@@ -88,6 +104,7 @@ display_help
 exit 1
 fi
 
+
 #3. If the third prohibited combination (hva indiv) is entered by the user, an error message is displayed, 
 #display_help fonction is called and an error code is returned.
 if [[ "$2" == "hva"  && "$3" == "indiv" ]]; then
@@ -95,6 +112,7 @@ echo "Error : HV-A stations can not have individuals as consumers." >&2
 display_help
 exit 1
 fi
+
 
 #4. If the fourth prohibited combination (hva all) is entered by the user, an error message is displayed, 
 #display_help fonction is called and an error code is returned.
@@ -106,7 +124,77 @@ fi
 
 
 
-#Check files
+
+
+#Filtering data in the CSV file based on user choice (5 possible combinations) :
+
+#1. Companies linked to an HVB station (hvb comp) :
+#Selection of the collones concerned in the CSV file.
+#Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
+if [[ "$2" == "hvb" ]] && [[ "$3" == "comp" ]]; then
+  if [[ -n "$4" ]]; then
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,2,5,8 | tr '-' '0' | ./projet
+  else 
+  awk -F';'  '$1 != "-" && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,2,5,8 | tr '-' '0' | ./projet
+fi
+fi
+
+
+#2. Companies linked to an HVA station (hva comp) :
+#Selection of the collones concerned in the CSV file.
+#Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
+if [[ "$2" == "hva" ]] && [[ "$3" == "comp" ]]; then
+  if [[ -n "$4" ]]; then
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,3,5,8 | tr '-' '0' | ./projet
+  else 
+  awk -F';'  '$1 != "-" && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,3,5,8 | tr '-' '0' | ./projet
+fi
+fi
+
+#3. Companies linkes to a LV station (lv comp) :
+#Selection of the collones concerned in the CSV file.
+#Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
+if [[ "$2" == "lv" ]] && [[ "$3" == "comp" ]]; then
+  if [[ -n "$4" ]]; then
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,4,5,8 | tr '-' '0' | ./projet
+  else
+  awk -F';'  '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,4,5,8 | tr '-' '0' | ./projet
+fi
+fi
+
+#4. Individuals linked to a LV station (lv indiv) :
+#Selection of the collones concerned in the CSV file.
+#Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
+if [[ "$2" == "lv" ]] && [[ "$3" == "indiv" ]]; then
+  if [[ -n "$4" ]]; then
+  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 == "-" && $6 != "-" && $7 == "-" && $8 != "-"' "cwire.dat" | cut -d';' -f1,4,6,8 | tr '-' '0' | ./projet
+  else
+  awk -F';' '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 == "-" && $6 != "-" && $7 == "-" && $8 != "-"' "cwire.dat" | cut -d';' -f1,4,6,8 | tr '-' '0' | ./projet
+fi
+fi
+
+#5. Individuals and companies linked to a LV station (lv all) :
+#Selection of the collones concerned in the CSV file.
+#Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
+if [[ "$2" == "lv" ]] && [[ "$3" == "all" ]]; then
+  if [[ -n "$4" ]]; then
+  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 != "-" && $7 == "-" && $8 != "-"' "cwire.dat" | cut -d';' -f1,4,5,6,8 | tr '-' '0' | ./projet
+  else
+  awk -F';' '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 != "-" && $7 == "-" && $8 != "-"' "cwire.dat" | cut -d';' -f1,4,5,6,8 | tr '-' '0' | ./projet
+fi
+
+
+
+
+#Display elapsed time
+B=$(date +%s.%N)
+diff=$(echo "$B - $A" | bc)
+echo "Elapsed time : $diff seconds"
+
+
+
+
+Check files
 if [ ! -f "$FILE_DAT" ]; then
     echo "Error : File $FILE_DAT does not exist or is not accessible." >&2
     exit 1
@@ -124,49 +212,6 @@ fi
 
 
 
-#Filtering data in the CSV file based on user choice (5 possible combinations) :
-
-#1. Companies linked to an HVB station (hvb comp) :
-#Selection of the collones concerned in the CSV file.
-#Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
-if [[ "$2" == "hvb" ]] && [[ "$3" == "comp" ]]; then
-  awk -F';'  '$1 != "-" && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,2,5,8 | tr '-' '0' | ./projet
-fi
-
-#2. Companies linked to an HVA station (hva comp) :
-#Selection of the collones concerned in the CSV file.
-#Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
-if [[ "$2" == "hva" ]] && [[ "$3" == "comp" ]]; then
-  awk -F';'  '$1 != "-" && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,3,5,8 | tr '-' '0' | ./projet
-fi
-
-#3. Companies linkes to a LV station (lv comp) :
-#Selection of the collones concerned in the CSV file.
-#Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
-if [[ "$2" == "lv" ]] && [[ "$3" == "comp" ]]; then
-  awk -F';'  '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,4,5,8 | tr '-' '0' | ./projet
-fi
-
-#4. Individuals linked to a LV station (lv indiv) :
-#Selection of the collones concerned in the CSV file.
-#Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
-if [[ "$2" == "lv" ]] && [[ "$3" == "indiv" ]]; then
-  awk -F';' '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 == "-" && $6 != "-" && $7 == "-" && $8 != "-"' "cwire.dat" | cut -d';' -f1,4,6,8 | tr '-' '0' | ./projet
-fi
-
-#5. Individuals and companies linked to a LV station (lv all) :
-#Selection of the collones concerned in the CSV file.
-#Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
-if [[ "$2" == "lv" ]] && [[ "$3" == "all" ]]; then
-  awk -F';' '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 != "-" && $7 == "-" && $8 != "-"' "cwire.dat" | cut -d';' -f1,4,5,6,8 | tr '-' '0' | ./projet
-fi
-
-
-
-
-#Display elapsed time
-B=$(date +%s.%N)
-diff=$(echo "$B - $A" | bc)
-echo "Elapsed time : $diff seconds"
 
 ./codeC
+
