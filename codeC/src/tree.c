@@ -1,6 +1,6 @@
 #include "tree.h"
 #include "balance.h"
-#include "tratment.h"
+#include "treatment.h"
 #include "avl_to_csv.h"
 
 

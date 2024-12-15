@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include "common.h"
+#include "tree.h"
 
 // Constants for maximum and minimum LV stations to write
 #define FIRST_MAX 10
