@@ -1,7 +1,4 @@
-#include "tree.h"
-#include "balance.h"
-#include "treatment.h"
-#include "avl_to_csv.h"
+#include "settings.h"
 
 
 Station* insertStation(Station* a, int id, long capacity,  int* h){

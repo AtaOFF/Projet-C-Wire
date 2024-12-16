@@ -1,9 +1,4 @@
-#include "tree.h"
-#include "balance.h"
-#include "treatment.h"
-#include "common.h"
-#include "avl_to_csv.h"
-#include "capacity_sort.h"
+#include "settings.h"
 
 
 

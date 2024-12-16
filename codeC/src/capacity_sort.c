@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "common.h"
+#include "settings.h"
 
 
 void quick_sort_by_capacity(StationResult **results, int low, int high) {

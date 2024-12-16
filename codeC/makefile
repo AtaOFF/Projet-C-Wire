@@ -17,7 +17,7 @@ SRC =src/main.c src/tree.c src/balance.c src/treatment.c src/avl_to_csv.c
 OBJ = $(SRC:.c=.o)
 
 #Executable 
-TARGET = ??
+TARGET = ./codeC
 
 #Default target
 all: $(TARGET)
