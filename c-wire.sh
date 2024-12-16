@@ -1,7 +1,7 @@
 
 #!/bin/bash
 
-FILE_DAT="c-wire_v00.dat"  # Path to the data file
+FILE_DAT=$1 # Path to the data file
 FILE_C="./codeC"           # Path to the compiled C executable
 OUTPUT_FILE="filtered_data.csv"   # Output CSV file (results from C program)
 
@@ -22,6 +22,23 @@ display_help() {
     echo "  - hvb all, hva all, hvb indiv, hva indiv"
     echo ""
 }
+
+# Check files
+if [ ! -f "$FILE_DAT" ]; then
+    echo "Error : File $FILE_DAT does not exist or is not accessible." >&2
+    exit 1
+fi
+
+if [ ! -r "$FILE_C" ]; then
+    echo "Error : File $FILE_C does not have read permissions." >&2
+    exit 1
+fi
+
+if [ ! -x "$FILE_C" ]; then
+    echo "Error : File $FILE_C is not executable." >&2
+    exit 1
+fi
+
 
 #Start timer 
 A=$(date +%s.%N)
@@ -47,11 +64,11 @@ fi
 
 #Check if the first parameter is the good path to the CSV file. Otherwise, an error message is displayed, 
 #display_help fonction is called and an error code is returned.
-if [[ ! -f "$1" || "$1" != *.csv ]]; then
-echo "Error : The first parameter must be a valid path to an existing .csv file. " >&2
-display_help
-exit 1
-fi
+#if [[ ! -f "$1" || "$1" != *.csv ]]; then
+#echo "Error : The first parameter must be a valid path to an existing .csv file. " >&2
+#display_help
+#exit 1
+#fi
 
 
 #Check if the second parameter is a type of station. Otherwise, an error message is displayed, 
@@ -75,7 +92,7 @@ fi
 
 #Check that the fourth parameter entered, which is the number of plant, if any, is valid.
 #If not, an error message is displayed, display_help fonction is called and an error code is returned.
-if [[ -n "$4"]]; then
+if [[ -n "$4" ]]; then
 if [[ "$4" != "1" && "$4" != "2" && "$4" != "3" && "$4" != "4" && "$4" != "5" ]]; then
 echo "Error : The fourth parameter must be a valid power plant." >&2
 display_help
@@ -132,8 +149,8 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "hvb" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,2,5,8 | tr '-' '0' | ./codeC > "$OUTPUT_FILE"
-  else 
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' $FILE_DAT | cut -d';' -f1,2,5,8 | tr '-' '0' 
+  else
   awk -F';'  '$1 != "-" && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,2,5,8 | tr '-' '0' | ./codeC > "$OUTPUT_FILE"
 fi
 fi
@@ -192,22 +209,6 @@ echo "Elapsed time : $diff seconds"
 
 
 
-
-Check files
-if [ ! -f "$FILE_DAT" ]; then
-    echo "Error : File $FILE_DAT does not exist or is not accessible." >&2
-    exit 1
-fi
-
-if [ ! -r "$FILE_C" ]; then
-    echo "Error : File $FILE_C does not have read permissions." >&2
-    exit 1
-fi
-
-if [ ! -x "$FILE_C" ]; then
-    echo "Error : File $FILE_C is not executable." >&2
-    exit 1
-fi
 
 
 
