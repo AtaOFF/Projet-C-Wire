@@ -1,7 +1,7 @@
 
 #!/bin/bash
 
-FILE_DAT="c-wire_v00.dat"  # Path to the data file
+FILE_DAT="$1"  # Path to the data file
 FILE_C="./codeC"           # Path to the compiled C executable
 OUTPUT_FILE="filtered_data.csv"   # Output CSV file (results from C program)
 
@@ -132,9 +132,9 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "hvb" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,2,5,8 | tr '-' '0' | ./codeC > "$OUTPUT_FILE"
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,2,5,8 | tr '-' '0' | ./codeC > "$2_$3.csv"
   else 
-  awk -F';'  '$1 != "-" && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,2,5,8 | tr '-' '0' | ./codeC > "$OUTPUT_FILE"
+  awk -F';'  '$1 != "-" && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,2,5,8 | tr '-' '0' | ./codeC > "$2_$3.csv"
 fi
 fi
 
@@ -144,9 +144,9 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "hva" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,3,5,8 | tr '-' '0' | ./codeC > "$OUTPUT_FILE"
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,3,5,8 | tr '-' '0' | ./codeC > "$2_$3.csv"
   else 
-  awk -F';'  '$1 != "-" && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,3,5,8 | tr '-' '0' | ./codeC > "$OUTPUT_FILE"
+  awk -F';'  '$1 != "-" && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,3,5,8 | tr '-' '0' | ./codeC > "$2_$3.csv"
 fi
 fi
 
@@ -155,9 +155,9 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "lv" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,4,5,8 | tr '-' '0' | ./codeC > "$OUTPUT_FILE"
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,4,5,8 | tr '-' '0' | ./codeC > "$2_$3.csv"
   else
-  awk -F';'  '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,4,5,8 | tr '-' '0' | ./codeC > "$OUTPUT_FILE"
+  awk -F';'  '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,4,5,8 | tr '-' '0' | ./codeC > "$2_$3.csv"
 fi
 fi
 
@@ -166,9 +166,9 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "lv" ]] && [[ "$3" == "indiv" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 == "-" && $6 != "-" && $7 == "-" && $8 != "-"' "cwire.dat" | cut -d';' -f1,4,6,8 | tr '-' '0' | ./codeC > "$OUTPUT_FILE"
+  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 == "-" && $6 != "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,4,6,8 | tr '-' '0' | ./codeC > "$2_$3.csv"
   else
-  awk -F';' '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 == "-" && $6 != "-" && $7 == "-" && $8 != "-"' "cwire.dat" | cut -d';' -f1,4,6,8 | tr '-' '0' | ./codeC > "$OUTPUT_FILE"
+  awk -F';' '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 == "-" && $6 != "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,4,6,8 | tr '-' '0' | ./codeC > "$2_$3.csv"
 fi
 fi
 
@@ -177,9 +177,10 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "lv" ]] && [[ "$3" == "all" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 != "-" && $7 == "-" && $8 != "-"' "cwire.dat" | cut -d';' -f1,4,5,6,8 | tr '-' '0' | ./codeC > "$OUTPUT_FILE"
+  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 != "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,4,5,6,8 | tr '-' '0' | ./codeC > "$2_$3.csv"
   else
-  awk -F';' '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 != "-" && $7 == "-" && $8 != "-"' "cwire.dat" | cut -d';' -f1,4,5,6,8 | tr '-' '0' | ./codeC > "$OUTPUT_FILE"
+  awk -F';' '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 != "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,4,5,6,8 | tr '-' '0' | ./codeC > "$2_$3.csv"
+fi
 fi
 
 
