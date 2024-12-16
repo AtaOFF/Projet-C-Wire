@@ -1,11 +1,7 @@
 
 #!/bin/bash
 
-<<<<<<< HEAD
-FILE_DAT=$1 # Path to the data file
-=======
 FILE_DAT="$1"  # Path to the data file
->>>>>>> 90b5ce277d5ae02831318433bdb33ca64c04182c
 FILE_C="./codeC"           # Path to the compiled C executable
 OUTPUT_FILE="filtered_data.csv"   # Output CSV file (results from C program)
 
@@ -68,11 +64,11 @@ fi
 
 #Check if the first parameter is the good path to the CSV file. Otherwise, an error message is displayed, 
 #display_help fonction is called and an error code is returned.
-#if [[ ! -f "$1" || "$1" != *.csv ]]; then
-#echo "Error : The first parameter must be a valid path to an existing .csv file. " >&2
-#display_help
-#exit 1
-#fi
+if [[ ! -f "$1" || "$1" != *.csv ]]; then
+echo "Error : The first parameter must be a valid path to an existing .csv file. " >&2
+display_help
+exit 1
+fi
 
 
 #Check if the second parameter is a type of station. Otherwise, an error message is displayed, 
@@ -153,15 +149,9 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "hvb" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-<<<<<<< HEAD
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' $FILE_DAT | cut -d';' -f1,2,5,8 | tr '-' '0' 
-  else
-  awk -F';'  '$1 != "-" && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "c-wire_v00.dat" | cut -d';' -f1,2,5,8 | tr '-' '0' | ./codeC > "$OUTPUT_FILE"
-=======
   awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,2,5,8 | tr '-' '0' | ./codeC > "$2_$3.csv"
   else 
   awk -F';'  '$1 != "-" && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,2,5,8 | tr '-' '0' | ./codeC > "$2_$3.csv"
->>>>>>> 90b5ce277d5ae02831318433bdb33ca64c04182c
 fi
 fi
 
