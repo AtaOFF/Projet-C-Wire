@@ -58,3 +58,24 @@ int search(Station* a, int id, Station* *searched) {
         return search(a -> rightSon, id, searched);
     }
 } 
+
+void Infix(Tree *p){ 
+    if(p!=NULL){
+        Infix(p->leftSon);
+        printf("[%02d]",p->valeur);
+        Infix(p->rightSon);
+    }
+}
+
+void deleteTree(Station* root) {
+    if (root == NULL) {
+        return;
+    }
+
+    /* Appel récursif pour supprimer les sous-arbres gauche et droit */
+    deleteTree(root->leftSon);
+    deleteTree(root->rightSon);
+
+    /* Libération du nœud actuel */
+    free(root);
+}

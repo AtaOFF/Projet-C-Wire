@@ -1,7 +1,42 @@
 #include "settings.h"
 
+void processInputToAVL(FILE *inputFile, const char *outputFilename) {
+    /* Variables */
+    FILE *outputFile = fopen(outputFilename, "w");
+    if (outputFile == NULL) {
+        printf("Error creating the output file.\n");
+        return;
+    }
+    fprintf(outputFile, "StationID;Capacity;TotalLoad\n");
 
-Station* buildAvl(Station* tree, int isLv, int isHva, int isHvb, char *chvb, char *chva, char *clv, char *ccomp, char *cindiv, char *ccapa, char *cload) {
-    int h = 0;
-    if (isLv) {
-        if (strcmp("-", chva)) { // This is an lv station
+    Tree *avlTree = NULL; // Root of the AVL tree
+    Tree *currentNode = NULL; // Node used to search in the AVL tree
+    int inputStatus = 0; // Status returned by fscanf
+    long stationID, consumerID, capacity, load; // Input data fields
+    int heightChange; // Flag for AVL balancing operations
+
+    /* Process input data */
+    while ((inputStatus = fscanf(inputFile, "%ld;%ld;%ld;%ld", 
+                                 &stationID, &consumerID, &capacity, &load)) == 4) {
+        /* If the station does not exist in the tree, insert it */
+        if (searchAVL(avlTree, stationID, &currentNode) == 0) {
+            avlTree = insertAVL(avlTree, stationID, capacity, load, &heightChange);
+        } 
+        /* If the station exists and capacity is provided, update the capacity */
+        else if (capacity != 0) {
+            currentNode->capacity = capacity;
+        } 
+        /* If the station exists and load is provided, add to total load */
+        else if (load != 0) {
+            currentNode->load += load;
+        }
+    }
+
+    /* Write aggregated data to CSV file */
+    infix(avlTree, outputFile);
+
+    /* Clean up */
+    fclose(outputFile);
+    deleteTree(avlTree);
+}
+
