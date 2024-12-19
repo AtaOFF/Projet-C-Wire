@@ -2,11 +2,13 @@
 Développé par **Alicia Kellai**, **Atahan Ozsolak** et **Hiba Mesbahi**
 
 **C-Wire** est un programme pour analyser et traiter les données d'un système de distribution d'électricité d'un réseau complexe. Il simule les consommations ou/et les capacités des sous-stations (HV-B, HV-A), des postes LV et leurs consommateurs (individuels ou entreprises).
-Il combine un **script Shell** pour le filtrage des données et un **programme C** pour la construction et la manipulation d'un arbre AVL afin de calculer et visualiser des résultats. L'objectif esr de permettre une analyse rapide et structurée des données fournies dans un ficher **CSV**.
+Il combine un **script Shell** pour le filtrage des données et un **programme C** pour la construction et la manipulation d'un arbre AVL afin de calculer et visualiser des résultats. 
+
+L'objectif esr de permettre une analyse rapide et structurée des données fournies dans un ficher **CSV**.
 
 ## **Etapes d'installation et de lancement**
 1. Prérequis:
-   - [Linux](https://www.linux.org/pages/download/#google_vignette) ou [Windows](https://www.microsoft.com/fr-fr/software-download/windows11).
+   - [Linux](https://www.linux.org/pages/download/#google_vignette) (recommandé) ou [Windows](https://www.microsoft.com/fr-fr/software-download/windows11).
    - Un compilateur C installé sur votre ordinateur (par exemple [GCC](https://fr.wikipedia.org/wiki/GNU_Compiler_Collection)).
    - Avoir [Gnuplot](https://fr.wikipedia.org/wiki/Gnuplot) sur son ordinateur.
    - Téléchargez les fichiers source du programme (les fichiers de simulations CSV sont compris dedans) sur [ce dépot **Github**](https://github.com/AtaOFF/Projet-C-Wire).
@@ -25,4 +27,8 @@ Il combine un **script Shell** pour le filtrage des données et un **programme C
     - ```hva``` : Sous-station HV-A
     - ```lv``` : Postes LV
 
-3. 
+3. ```type_consommateur```
+   - ```comp``` : Entreprises
+   - ```indiv``` : Particulier
+   - ```all``` : Tous les consommateurs
+
