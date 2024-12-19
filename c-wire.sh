@@ -126,15 +126,25 @@ fi
 
 
 #Before starting the data filtering and executing the C code, 
-#check for its presence, execution and reading rights.
+#check for its presence, execute and reading rights. 
+#If the file already have permissions, do nothing.
+#Else, add missing permissions. If adding permissions failed, return an error code
 if [ ! -x "$FILE_C" ]; then
-    echo "Error : File $FILE_C is not executable." >&2
+    echo "File $FILE_C does not have execute permissions. Adding execute permissions ..."
+    chmod +x "$FILE_C"
+    if [ $? -ne 0 ]; then
+    echo "Error : unable to add execute permissions to $FILE_C." >&2
     exit 1
+    fi
 fi
 
 if [ ! -r "$FILE_C" ]; then
-    echo "Error : File $FILE_C does not have read permissions." >&2
+    echo "File $FILE_C does not have read permissions. Adding read permissions ..."
+    chmod +r "$FILE_C" 
+    if [ $? -ne 0 ]; then
+    echo "Error : unable to add read permissions to $FILE_C." >&2
     exit 1
+    fi
 fi
 
 
