@@ -70,7 +70,6 @@ display_help
 exit 1
 fi
 
-
 #Check if the second parameter is a type of station. Otherwise, an error message is displayed, 
 #display_help fonction is called and an error code is returned.
 if [[ "$2" != "hva" && "$2" != "hvb" && "$2" != "lv" ]]; then
@@ -78,7 +77,6 @@ echo "Error : The second parameter must be a type of station." >&2
 display_help
 exit 1
 fi
-
 
 #Check if the third parameter is a type of consumer. Otherwise, an error message is displayed, 
 #display_help fonction is called and an error code is returned.
@@ -140,7 +138,17 @@ display_help
 exit 1
 fi
 
-./codeC
+
+
+#Before starting the data filtering and executing the C code, 
+#check for its presence and execution rights.
+
+
+
+
+
+
+
 
 #Filter data based on user input and call the C program with the filtered data (5 possible combinations) :
 
