@@ -1,35 +1,14 @@
 
 
-# Compiler
-CC=gcc
+all: exec
 
-#Compiler flags
-CFLAGS= -std=c11 -Iinclude
+exec: main.o tree.p
 
-#Libraries
-LIBS = -lpthread
+main.o: main.c settings.h
+	gcc -c main.c -o main.o
 
-#Source files
-SRC =src/main.c src/tree.c 
-
-#Object files
-OBJ = $(SRC:.c=.o)
-
-#Executable 
-TARGET = ./codeC
-
-#Default target
-all: $(TARGET)
-
-#Linking the executable
-$(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
-
-%.o: %.c
-	$(CC) $(CFLAGS) -c -o $@ $<
-
+tree.o: tree.c settings.h
+	gcc -c tree.c -o tree.o
 clean:
-	rm -f $(OBJ) $(TARGET)
-
-test:
-	./$(TARGET) -test
+	rm -f *.o
+	rm -f exec
