@@ -2,7 +2,7 @@
 
 all: exec
 
-exec: main.o tree.p
+exec: main.o tree.o
 
 main.o: main.c settings.h
 	gcc -c main.c -o main.o
