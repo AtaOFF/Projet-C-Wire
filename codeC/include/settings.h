@@ -31,4 +31,4 @@ int getBalance(Station *a);
 Station* doublerotationLeft(Station* a);
 Station* doublerotationRight(Station* a);
 Station* balance(Station* a);
-Station* insertStation(Station* a, int id, long capacity,  int* h);
+Station* insertStation(Station* a, int id, long capacity, long load, int* h);
