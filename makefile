@@ -1,14 +1,30 @@
+# Variables
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -g
+LDFLAGS =
+TARGET = exec
+SOURCES = main.c tree.c
+OBJECTS = $(SOURCES:.c=.o)
+DEPS = settings.h
 
+# Règle par défaut
+all: $(TARGET)
 
-all: exec
+# Règle pour construire l'exécutable
+$(TARGET): $(OBJECTS)
+$(CC) $(LDFLAGS) $(OBJECTS) -o $(TARGET)
 
-exec: main.o tree.o
+# Règle pour construire les fichiers objets
+%.o: %.c $(DEPS)
+$(CC) $(CFLAGS) -c $< -o $@
 
-main.o: main.c settings.h
-	gcc -c main.c -o main.o
-
-tree.o: tree.c settings.h
-	gcc -c tree.c -o tree.o
+# Règle pour nettoyer les fichiers générés
 clean:
-	rm -f *.o
-	rm -f exec
+rm -f $(OBJECTS) $(TARGET)
+
+# Règle pour nettoyer uniquement les fichiers objets
+clean-obj:
+rm -f $(OBJECTS)
+
+# Indique que ces règles ne correspondent pas à des fichiers
+.PHONY: all clean clean-obj
