@@ -137,12 +137,12 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "hvb" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" == $7 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./codeC | while read line;
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" == $7 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./codeC/src/main.c | while read line;
   do echo $line
   done > hvb_comp_$4.csv
   sort -t ';' -k2,2n hvb_comp_$4.csv -o hvb_comp_$4.csv
   else 
-  awk -F';'  '$2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $8 != "-" || $2 != "-" && $3 == "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./codeC | while read line;
+  awk -F';'  '$2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $8 != "-" || $2 != "-" && $3 == "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./codeC/src/main.c | while read line;
   do
   echo $line 
   done > hvb_comp.csv 
@@ -157,13 +157,13 @@ fi
 #Redirection results to an output file with the appropriate name.
 if [[ "$2" == "hva" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 != "-" && $3 != "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f3,7,8 | tr '-' '0' | ./codeC | while read line;
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 != "-" && $3 != "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f3,7,8 | tr '-' '0' | ./codeC/src/main.c | while read line;
   do
   echo $line
   done > hva_comp_$4.csv
   sort -t ';' -k2,2n hva_comp_$4.csv -o hva_comp_$4.csv
   else 
-  awk -F';'  '$2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $8 != "-" || $2 != "-" && $3 != "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f3,7,8 | tr '-' '0' | ./codeC | while read line;
+  awk -F';'  '$2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $8 != "-" || $2 != "-" && $3 != "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f3,7,8 | tr '-' '0' | ./codeC/src/main.c | while read line;
   do
   echo $line
   done > hva_comp.csv
@@ -177,13 +177,13 @@ fi
 #Redirection results to an output file with the appropriate name.
 if [[ "$2" == "lv" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC/src/main.c | while read line;
   do
   echo $line
   done > lv_comp_$4.csv
   sort -t ';' -k2,2n lv_comp_$4.csv -o lv_comp_$4.csv
   else
-  awk -F';'  '$2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  awk -F';'  '$2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC/src/main.c | while read line;
   do
   echo $line
   done > lv_comp.csv
@@ -197,13 +197,13 @@ fi
 #Redirection results to an output file with the appropriate name.
 if [[ "$2" == "lv" ]] && [[ "$3" == "indiv" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $6 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $6 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC/src/main.c | while read line;
   do
   echo $line
   done > lv_indiv_$4.csv
   sort -t ';' -k2,2n lv_indiv_$4.csv -o lv_indiv_$4.csv
   else
-  awk -F';' '$2 == "-" && $3 == "-" && $4 != "-" && $6 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  awk -F';' '$2 == "-" && $3 == "-" && $4 != "-" && $6 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC/src/main.c | while read line;
   do
   echo $line
   done > lv_indiv.csv
@@ -215,26 +215,32 @@ fi
 #Selection of the collones concerned in the CSV file.
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 #Redirection results to an output file with the appropriate name.
+#In this case (lv all), create an additional file with the 10 lv stations that use most energy,
+#and the 10 that use least energy.
 if [[ "$2" == "lv" ]] && [[ "$3" == "all" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC/src/main.c | while read line;
   do
   echo $line
   done > lv_all_$4.csv
   sort -t ';' -k2,2n lv_all_$4.csv -o lv_all_$4.csv
+  head -n 10 lv_all_$4.csv > lv_min_max_$4.csv
+  tail -n 10 lv_all_$4.csv >> lv_min_max_$4.csv
   else
-  awk -F';' '$2 == "-" && $3 == "-" && $4 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  awk -F';' '$2 == "-" && $3 == "-" && $4 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC/src/main.c | while read line;
   do
   echo $line
   done > lv_all.csv
   sort -t ';' -k2,2n lv_all.csv -o lv_all.csv
+  head -n 10 lv_all.csv > lv_min_max.csv
+  tail -n 10 lv_all.csv >> lv_min_max.csv
 fi
 fi
 
 
 
 
-Display elapsed time
+#Display elapsed time
 B=$(date +%s.%N)
 diff=$(echo "$B - $A" | bc)
 echo "Elapsed time : $diff seconds"
