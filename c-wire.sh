@@ -2,9 +2,10 @@
 #!/bin/bash
 
 FILE_DAT="$1"  # Path to the data file
-FILE_C="./codeC"           # Path to the compiled C executable
 OUTPUT_FILE="filtered_data.csv"   # Output CSV file (results from C program)
 
+
+gcc -o codeC projet.c
 
 # Function: Display help
 display_help() {
@@ -52,7 +53,7 @@ fi
 
 #Check if the first parameter is the good path to the CSV file. Otherwise, an error message is displayed, 
 #display_help fonction is called and an error code is returned.
-if [[ ! -f "$1" || "$1" != *.csv ]]; then
+if [[ ! -f "$1" || "$1" != *.dat ]]; then
 echo "Error : The first parameter must be a valid path to an existing .csv file. " >&2
 display_help
 exit 1
@@ -128,28 +129,6 @@ fi
 
 
 
-#Before starting the data filtering and executing the C code, 
-#check for its presence, execute and reading rights. 
-#If the file already have permissions, do nothing.
-#Else, add missing permissions. If adding permissions failed, return an error code
-if [ ! -x "$FILE_C" ]; then
-    echo "File $FILE_C does not have execute permissions. Adding execute permissions ..."
-    chmod +x "$FILE_C"
-    if [ $? -ne 0 ]; then
-    echo "Error : unable to add execute permissions to $FILE_C." >&2
-    exit 1
-    fi
-fi
-
-if [ ! -r "$FILE_C" ]; then
-    echo "File $FILE_C does not have read permissions. Adding read permissions ..."
-    chmod +r "$FILE_C" 
-    if [ $? -ne 0 ]; then
-    echo "Error : unable to add read permissions to $FILE_C." >&2
-    exit 1
-    fi
-fi
-
 
 
 #Filter data based on user input and call the C program with the filtered data (5 possible combinations) :
@@ -159,9 +138,14 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "hvb" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,2,5,8 | tr '-' '0' | FILE_C
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" == $7 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./codeC | while read line;
+  do echo $line
+  done > hvb_comp_$4.csv
   else 
-  awk -F';'  '$1 != "-" && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,2,5,8 | tr '-' '0' | FILE_C 
+  awk -F';'  '$2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $8 != "-" || $2 != "-" && $3 == "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line 
+  done > hvb_comp.csv 
 fi
 fi
 
@@ -171,9 +155,15 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "hva" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,3,5,8 | tr '-' '0' | FILE_C
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 != "-" && $3 != "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f3,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line
+  done > hva_comp_$4.csv
   else 
-  awk -F';'  '$1 != "-" && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,3,5,8 | tr '-' '0' | FILE_C 
+  awk -F';'  '$2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $8 != "-" || $2 != "-" && $3 != "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f3,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line
+  done > hva_comp.csv
 fi
 fi
 
@@ -182,9 +172,15 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "lv" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,4,5,8 | tr '-' '0' | FILE_C
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line
+  done > lv_comp_$4.csv
   else
-  awk -F';'  '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,4,5,8 | tr '-' '0' | FILE_C 
+  awk -F';'  '$2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line
+  done > lv_comp.csv
 fi
 fi
 
@@ -193,10 +189,16 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "lv" ]] && [[ "$3" == "indiv" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 == "-" && $6 != "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,4,6,8 | tr '-' '0' | FILE_C
+  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $6 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line
+  done > lv_indiv_$4.csv
   else
-  awk -F';' '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 == "-" && $6 != "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,4,6,8 | tr '-' '0' | FILE_C 
-fi
+  awk -F';' '$2 == "-" && $3 == "-" && $4 != "-" && $6 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line
+  done > lv_indiv.csv
+  fi
 fi
 
 #5. Individuals and companies linked to a LV station (lv all) :
@@ -204,9 +206,15 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "lv" ]] && [[ "$3" == "all" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 != "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,4,5,6,8 | tr '-' '0' | FILE_C
+  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line
+  done > lv_all_$4.csv
   else
-  awk -F';' '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 != "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f1,4,5,6,8 | tr '-' '0' | FILE_C 
+  awk -F';' '$2 == "-" && $3 == "-" && $4 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line
+  done > lv_all.csv
 fi
 fi
 
