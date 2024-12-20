@@ -23,7 +23,6 @@ Station *createStation(int Id,long Capacity,long Load){
         printf("Memory allocation failed.\n");
         exit(1);
     }
-    
     new -> leftSon = NULL;
     new -> rightSon = NULL;
     new -> balance = 0;
@@ -42,17 +41,17 @@ int search(Station* a, int id, Station** searched) {
         return 1;
     }
     if (id < a -> id) {
-        return search(a->leftSon, id, searched);
+        return search(a -> leftSon, id, searched);
     } else {
-        return search(a->rightSon, id, searched);
+        return search(a -> rightSon, id, searched);
     }
 } 
 
-void Infix(Station *p){ 
-    if(p!=NULL){
-        Infix(p->leftSon);
-        printf("%d;%ld;%ld\n",p->id,p->capacity,p->load);
-        Infix(p->rightSon);
+void Infix (Station *p){ 
+    if(p != NULL){
+        Infix(p -> leftSon);
+        printf("%d;%ld;%ld\n",p -> id, p -> capacity, p -> load);
+        Infix(p -> rightSon);
     }
 }
 
@@ -60,34 +59,30 @@ void deleteTree(Station* root) {
     if (root == NULL) {
         return;
     }
-
-    /* Appel récursif pour supprimer les sous-arbres gauche et droit */
-    deleteTree(root->leftSon);
-    deleteTree(root->rightSon);
-
-    /* Libération du nœud actuel */
- free(root);
+    deleteTree(root -> leftSon);
+    deleteTree(root -> rightSon);
+    free(root);
 }
 
 Station* rotateLeft(Station* a){
-    Station* pivot = a->rightSon; 
-    int eq_a = a->balance;
-    int eq_p = pivot->balance;
-    a->rightSon = pivot->leftSon; 
-    pivot->leftSon = a; 
-    a->balance = eq_a - max(eq_p, 0) - 1;
-    pivot->balance = min3(eq_a - 2, eq_a + eq_p - 2, eq_p - 1);
+    Station* pivot = a -> rightSon; 
+    int eq_a = a -> balance;
+    int eq_p = pivot -> balance;
+    a -> rightSon = pivot -> leftSon; 
+    pivot -> leftSon = a; 
+    a -> balance = eq_a - max(eq_p, 0) - 1;
+    pivot -> balance = min3(eq_a - 2, eq_a + eq_p - 2, eq_p - 1);
     return pivot; 
 }
 
 Station* rotateRight(Station* a){
-    Station* pivot = a->leftSon; 
-    int eq_a = a->balance;
-    int eq_p = pivot->balance;
-    a->leftSon = pivot->rightSon; 
-    pivot->leftSon = a; 
-    a->balance = eq_a - max(eq_p, 0) - 1;
-    pivot->balance = min3(eq_a - 2, eq_a + eq_p - 2, eq_p - 1);
+    Station* pivot = a -> leftSon; 
+    int eq_a = a -> balance;
+    int eq_p = pivot -> balance;
+    a -> leftSon = pivot -> rightSon; 
+    pivot -> leftSon = a; 
+    a -> balance = eq_a - max(eq_p, 0) - 1;
+    pivot -> balance = min3(eq_a - 2, eq_a + eq_p - 2, eq_p - 1);
     return pivot; 
 }
 
@@ -95,23 +90,26 @@ int getHeight(Station* a) {
     if (a == NULL){
         return 0;
     }
-    return 1 + max(getHeight(a->leftSon), getHeight(a->rightSon));
+    return 1 + max(getHeight(a -> leftSon), getHeight(a -> rightSon));
 }
+
 
 int getBalance(Station* a){
     if (a == NULL){
         return 0;
     }
-    return getHeight(a->rightSon) - getHeight(a->leftSon);
+    return getHeight(a -> rightSon) - getHeight(a -> leftSon);
 }
 
+
 Station* doublerotationLeft(Station* a){
-    a->rightSon = rotateRight(a->rightSon);
+    a -> rightSon = rotateRight(a -> rightSon);
     return rotateLeft(a);
 }
 
+
 Station* doublerotationRight(Station* a){
-    a->leftSon = rotateLeft(a->leftSon);
+    a -> leftSon = rotateLeft(a -> leftSon);
     return rotateRight(a);
 }
 
@@ -120,22 +118,22 @@ Station* balance(Station* a){
     if(a == NULL){
         exit(2);
     }
-    if(a->balance >= 2){                                
-        if(a->rightSon == NULL){
+    if(a -> balance >= 2){                                
+        if(a -> rightSon == NULL){
             exit(3);
         }
-        if(a->rightSon->balance >= 0){
+        if(a -> rightSon -> balance >= 0){
             a = rotateLeft(a);
         }
         else{
             a = doublerotationLeft(a);
         }
     }
-    else if(a->balance <= -2){                         
-        if(a->leftSon == NULL){
+    else if(a -> balance <= -2){                         
+        if(a -> leftSon == NULL){
             exit(4);
         }
-        if(a->leftSon->balance <= 0){
+        if(a -> leftSon -> balance <= 0){
             a = rotateRight(a);
         }
         else{
