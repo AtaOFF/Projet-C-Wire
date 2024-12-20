@@ -4,7 +4,9 @@
 FILE_DAT="$1"  # Path to the data file
 OUTPUT_FILE="filtered_data.csv"   # Output CSV file (results from C program)
 
+
 gcc -o codeC projet.c
+
 # Function: Display help
 display_help() {
     echo "Usage: ./c-wire.sh [ARG] [OPTION]"
@@ -125,6 +127,9 @@ exit 1
 fi
 
 
+
+
+
 #Filter data based on user input and call the C program with the filtered data (5 possible combinations) :
 
 #1. Companies linked to an HVB station (hvb comp) :
@@ -132,9 +137,14 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "hvb" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./codeC 
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" == $7 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./codeC | while read line;
+  do echo $line
+  done > hvb_comp_$4.csv
   else 
-  awk -F';'  '$1 != "-" && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./codeC 
+  awk -F';'  '$2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $8 != "-" || $2 != "-" && $3 == "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line 
+  done > hvb_comp.csv 
 fi
 fi
 
@@ -144,9 +154,15 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "hva" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f3,7,8 | tr '-' '0' | ./codeC 
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 != "-" && $3 != "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f3,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line
+  done > hva_comp_$4.csv
   else 
-  awk -F';'  '$1 != "-" && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f3,7,8 | tr '-' '0' | ./codeC 
+  awk -F';'  '$2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $8 != "-" || $2 != "-" && $3 != "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f3,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line
+  done > hva_comp.csv
 fi
 fi
 
@@ -155,9 +171,15 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "lv" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC 
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line
+  done > lv_comp_$4.csv
   else
-  awk -F';'  '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 == "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC 
+  awk -F';'  '$2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line
+  done > lv_comp.csv
 fi
 fi
 
@@ -166,10 +188,16 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "lv" ]] && [[ "$3" == "indiv" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 == "-" && $6 != "-" && $7 == "-" && $8 != "-"||$1 == power_plant && $4 != "-" && $7 != "-" ' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC 
+  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $6 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line
+  done > lv_indiv_$4.csv
   else
-  awk -F';' '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 == "-"|| $4 != "-" && $8 == "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC 
-fi
+  awk -F';' '$2 == "-" && $3 == "-" && $4 != "-" && $6 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line
+  done > lv_indiv.csv
+  fi
 fi
 
 #5. Individuals and companies linked to a LV station (lv all) :
@@ -177,9 +205,15 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "lv" ]] && [[ "$3" == "all" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 != "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC 
+  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line
+  done > lv_all_$4.csv
   else
-  awk -F';' '$1 != "-" && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $6 != "-" && $7 == "-" && $8 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC 
+  awk -F';' '$2 == "-" && $3 == "-" && $4 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC | while read line;
+  do
+  echo $line
+  done > lv_all.csv
 fi
 fi
 
