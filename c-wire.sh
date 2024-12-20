@@ -22,9 +22,6 @@ display_help() {
     echo "  The following combinations are forbidden:"
     echo "  - hvb all, hva all, hvb indiv, hva indiv"
     echo ""
-    echo ""
-    echo ""
-    
 }
 
 
@@ -59,6 +56,7 @@ display_help
 exit 1
 fi
 
+
 #Check if the second parameter is a type of station. Otherwise, an error message is displayed, 
 #display_help fonction is called and an error code is returned.
 if [[ "$2" != "hva" && "$2" != "hvb" && "$2" != "lv" ]]; then
@@ -66,6 +64,7 @@ echo "Error : The second parameter must be a type of station." >&2
 display_help
 exit 1
 fi
+
 
 #Check if the third parameter is a type of consumer. Otherwise, an error message is displayed, 
 #display_help fonction is called and an error code is returned.
@@ -222,12 +221,8 @@ fi
 
 
 #Display elapsed time
-B=$(date +%s.%N)
-diff=$(echo "$B - $A" | bc)
-echo "Elapsed time : $diff seconds"
-
-
-
-
+#B=$(date +%s.%N)
+#diff=$(echo "$B - $A" | bc)
+#echo "Elapsed time : $diff seconds"
 
 
