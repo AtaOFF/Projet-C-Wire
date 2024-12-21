@@ -4,7 +4,6 @@ FILE_DAT="$1"  # Path to the data file
 OUTPUT_FILE="filtered_data.csv"   # Output CSV file (results from C program)
 
 
-make
 
 # Function: Display help
 display_help() {
@@ -38,6 +37,7 @@ exit 0
 fi
 done
 
+make
 
 #Check for required parameters. If one or more are missing, an error message is displayed,
 #display_help fonction is called and an error code is returned.
@@ -130,7 +130,6 @@ fi
 
 
 #Filter data based on user input and call the C program with the filtered data (5 possible combinations) :
-
 #1. Companies linked to an HVB station (hvb comp) :
 #Selection of the collones concerned in the CSV file.
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
