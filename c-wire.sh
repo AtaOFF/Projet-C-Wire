@@ -4,6 +4,7 @@ FILE_DAT="$1"  # Path to the data file
 OUTPUT_FILE="filtered_data.csv"   # Output CSV file (results from C program)
 
 
+make > /dev/null 2>&1
 
 # Function: Display help
 display_help() {
