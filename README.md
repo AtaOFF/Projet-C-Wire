@@ -20,7 +20,7 @@ L'objectif esr de permettre une analyse rapide et structurée des données fourn
 ## Arguments possibles
 1. ```<fichier.dat>```
 
-   Chemin vers le fichier CSV contenant les données d'entrée (un fichier de simulation est fournis dans le dépot)
+   Chemin vers le fichier .dat contenant les données d'entrée (un fichier de simulation est fournis dans le dépot)
    
 2. ```type_station```
     - ```hvb``` : Sous-station HV-B
