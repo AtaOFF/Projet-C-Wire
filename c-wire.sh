@@ -32,6 +32,17 @@ exit 1
 fi
 
 
+#Check if graphs folder exists. Otherwise, create it
+if [ ! -d "graphs" ]; then
+mkdir -p "graphs"
+  if [ $? -ne 0 ]; then
+  echo "Error : Creation of the folder failed." >&2
+  exit 1
+  fi
+fi
+
+
+
 #Start timer
 A=$(date +%s.%N)
 
@@ -55,19 +66,28 @@ exit 1
 fi
 
 
+
+#Check if the folder codeC exists. Otherwise, an error code is returned.
+if [ ! -d "./codeC" ]; then
+echo "Error : The folder ./codeC does not exist." >&2
+exit 1
+fi
+
+
+
 #Check if the executable C exists, can be read, and be executed.
 #Otherwise, an error code is returned.
-if [ ! -f ./codeC/exec ]; then
+if [ ! -f "./codeC/exec" ]; then
 echo "Error : The executable C does not exist." >&2
 exit 1
 fi
 
-if [ ! -r ./codeC/exec ]; then
+if [ ! -r "./codeC/exec" ]; then
 echo "Error : The executable C cannot be read." >&2
 exit 1
 fi
 
-if [ ! -x ./codeC/exec ]; then
+if [ ! -x "./codeC/exec" ]; then
 echo "Error : The executable C cannot be executed." >&2
 exit 1
 fi
@@ -170,7 +190,7 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "hvb" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" == $7 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./codeC/exec | while read line;
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./codeC/exec | while read line;
   do echo $line
   done > hvb_comp_$4.csv
   sort -t ';' -k2,2n hvb_comp_$4.csv -o hvb_comp_$4.csv
