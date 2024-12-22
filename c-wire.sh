@@ -4,7 +4,7 @@ FILE_DAT="$1"  # Path to the data file
 OUTPUT_FILE="filtered_data.csv"   # Output CSV file (results from C program)
 
 
-make > /dev/null 2>&1 || true
+make > /dev/null 2>&1
 
 # Function: Display help
 display_help() {
@@ -29,33 +29,6 @@ display_help() {
 A=$(date +%s.%N)
 
 
-#Check if the folder codeC exists. Otherwise, an error code is returned.
-if [ ! -d "./codeC" ]; then
-echo "Error : The folder ./codeC does not exist." >&2
-exit 1
-fi
-
-
-
-#Check if makefile exists
-#Otherwise, an error code is returned.
-if [ ! -f "./codeC/makefile" ]; then
-echo "Error : Makefile does not exist." >&2
-exit 1
-fi
-
-
-#Check if graphs folder exists. Otherwise, create it
-if [ ! -d "graphs" ]; then
-mkdir -p "graphs"
-  if [ $? -ne 0 ]; then
-  echo "Error : Creation of the folder failed." >&2
-  exit 1
-  fi
-fi
-
-
-
 #Check if help command is requested in the parameters entered. If yes, display_help fonction is called.
 #Otherwise, do nothing.
 for arg in "$@"; do
@@ -64,7 +37,6 @@ display_help
 exit 0
 fi
 done
-
 
 
 #Check for required parameters. If one or more are missing, an error message is displayed,
