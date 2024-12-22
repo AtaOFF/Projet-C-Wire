@@ -27,6 +27,11 @@ int main() {
 //is not already part of the tree
             tree = insertStation(tree, arg1, arg2, arg3, &h); 
 //Insert the first argument in the tree and update the tree
+
+            if (tree == NULL){
+//If the function insertStation returns NULL, returns a positive value (error case)
+                return 1;
+            }
         }
 
 //Else if the scanf worked well and and the first argument is already part of the tree,
@@ -49,8 +54,9 @@ int main() {
     Infix(tree);
 //Do an infix path of the tree so that the data is sorted in ascending order of identifier
 
-    Delete(tree);
+    deleteTree(tree);
 //Free the memory of the tree
 
     return 0;
+//Returns 0 if everything works well
 }
