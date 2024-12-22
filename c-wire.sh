@@ -24,9 +24,17 @@ display_help() {
 
 
 
+#Check if the folder codeC exists. Otherwise, an error code is returned.
+if [ ! -d "./codeC" ]; then
+echo "Error : The folder ./codeC does not exist." >&2
+exit 1
+fi
+
+
+
 #Check if makefile exists
 #Otherwise, an error code is returned.
-if [ ! -f "makefile" ]; then
+if [ ! -f "./codeC/makefile" ]; then
 echo "Error : Makefile does not exist." >&2
 exit 1
 fi
@@ -62,14 +70,6 @@ done
 make
 if [ $? -ne 0 ]; then
 echo "Error : Compilation failed." >&2
-exit 1
-fi
-
-
-
-#Check if the folder codeC exists. Otherwise, an error code is returned.
-if [ ! -d "./codeC" ]; then
-echo "Error : The folder ./codeC does not exist." >&2
 exit 1
 fi
 
