@@ -8,7 +8,7 @@ OBJECTS = $(SOURCES:./%.c=./%.o)
 DEPS = ./codeC/settings.h
 
 #Default rule to check if sources have changed
-.PHONY: all
+all : $(TARGET)
 
 #Rule to build the executable
 $(TARGET): $(OBJECTS)
@@ -17,7 +17,7 @@ $(TARGET): $(OBJECTS)
 	@echo "Compilation réussie : exécutable généré -> $(TARGET)"
 
 #Rule for building object files
-codeC/%.o: codeC/%.c $(DEPS)
+%.o: %.c $(DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 #Rule to run the program
