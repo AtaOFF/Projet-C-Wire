@@ -39,15 +39,15 @@ done
 #Check for required parameters. If one or more are missing, an error message is displayed,
 #display_help fonction is called and an error code is returned.
 if [[ -z "$1" || -z "$2" || -z "$3" ]]; then
-  echo "Error : Missing parameters." >&2
-  display_help
-  exit 1
+echo "Error : Missing parameters." >&2
+display_help
+exit 1
 fi
 
-#Check if the first parameter is the good path to the CSV file. Otherwise, an error message is displayed,
+#Check if the first parameter is the good path to the DAT file. Otherwise, an error message is displayed,
 #display_help fonction is called and an error code is returned.
 if [[ ! -f "$1" || "$1" != *.dat ]]; then
-echo "Error : The first parameter must be a valid path to an existing .csv file. " >&2
+echo "Error : The first parameter must be a valid path to an existing .dat file. " >&2
 display_help
 exit 1
 fi
@@ -132,7 +132,7 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "hvb" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" == $7 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./exec | while read line;
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./exec | while read line;
   do echo $line
   done > hvb_comp_$4.csv
   sort -t ';' -k2,2n hvb_comp_$4.csv -o hvb_comp_$4.csv
@@ -207,23 +207,27 @@ if [[ "$2" == "lv" ]] && [[ "$3" == "indiv" ]]; then
 fi
 
 #5. Individuals and companies linked to a LV station (lv all) :
+#Selection of the collones concerned in the CSV file.
+#Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
+#Redirection results to an output file with the appropriate name.
+#In this case (lv all), create an additional file with the 10 lv stations that use most energy,
+#and the 10 that use least energy.
 if [[ "$2" == "lv" ]] && [[ "$3" == "all" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./exec | while read line;
+  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./exec| while read line;
   do
   echo $line
   done > lv_all_$4.csv
   sort -t ';' -k2,2n lv_all_$4.csv -o lv_all_$4.csv
   head -n 10 lv_all_$4.csv > lv_min_max_$4.csv
   tail -n 10 lv_all_$4.csv >> lv_min_max_$4.csv
-
-  # Ajouter la différence dans une nouvelle colonne
+# Add the graph differenec in a new column
   awk -F';' 'NR==1{print $0";Difference"} NR>1{print $0";"($3-$2)}' lv_min_max_$4.csv > lv_min_max_with_diff_$4.csv
 
-  # Générer le graphique avec Gnuplot
+# Generate the graph with Gnuplot
   gnuplot -e "filename='lv_min_max_with_diff_$4.csv'; outputfile='lv_min_max_bars_$4.png'" graphs/plot_lv.gnuplot
 
-  echo "Graphique généré : lv_min_max_bars_$4.png"
+  echo "Graph generated : lv_min_max_bars_$4.png"
   else
   awk -F';' '$2 == "-" && $3 == "-" && $4 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./exec | while read line;
   do
@@ -233,14 +237,14 @@ if [[ "$2" == "lv" ]] && [[ "$3" == "all" ]]; then
   head -n 10 lv_all.csv > lv_min_max.csv
   tail -n 10 lv_all.csv >> lv_min_max.csv
 
-  # Ajouter la différence dans une nouvelle colonne
+# Add the graph differenec in a new column
   awk -F';' 'NR==1{print $0";Difference"} NR>1{print $0";"($3-$2)}' lv_min_max.csv > lv_min_max_with_diff.csv
 
-  # Générer le graphique avec Gnuplot
+# Generate the graph with Gnuplot
   gnuplot -e "filename='lv_min_max_with_diff.csv'; outputfile='lv_min_max_bars.png'" graphs/plot_lv.gnuplot
 
-  echo "Graphique généré : lv_min_max_bars.png"
-  fi
+  echo "Graph generated : lv_min_max_bars.png"
+fi
 fi
 
 
