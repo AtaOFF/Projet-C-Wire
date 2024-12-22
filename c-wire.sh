@@ -26,6 +26,14 @@ display_help() {
 
 
 
+#Check if makefile exists
+#Otherwise, an error code is returned.
+if [ ! -f "makefile" ]; then
+echo "Error : Makefile does not exist." >&2
+exit 1
+fi
+
+
 #Start timer
 A=$(date +%s.%N)
 
@@ -39,20 +47,47 @@ exit 0
 fi
 done
 
+
+#Implementation of the programme
+#If compilation fails, return an error code
 make
+if [ $? -ne 0 ]; then
+echo "Error : Compilation failed." >&2
+exit 1
+fi
+
+
+#Check if the executable C exists, can be read, and be executed.
+#Otherwise, an error code is returned.
+if [ ! -f ./exec ]; then
+echo "Error : The executable C does not exist." >&2
+exit 1
+fi
+
+if [ ! -r ./exec ]; then
+echo "Error : The executable C cannot be read." >&2
+exit 1
+fi
+
+if [ ! -x ./exec ]; then
+echo "Error : The executable C cannot be executed." >&2
+exit 1
+fi
+
+
 
 #Check for required parameters. If one or more are missing, an error message is displayed,
 #display_help fonction is called and an error code is returned.
 if [[ -z "$1" || -z "$2" || -z "$3" ]]; then
-  echo "Error : Missing parameters." >&2
-  display_help
-  exit 1
+echo "Error : Missing parameters." >&2
+display_help
+exit 1
 fi
 
-#Check if the first parameter is the good path to the CSV file. Otherwise, an error message is displayed,
+#Check if the first parameter is the good path to the DAT file. Otherwise, an error message is displayed,
 #display_help fonction is called and an error code is returned.
 if [[ ! -f "$1" || "$1" != *.dat ]]; then
-echo "Error : The first parameter must be a valid path to an existing .csv file. " >&2
+echo "Error : The first parameter must be a valid path to an existing .dat file. " >&2
 display_help
 exit 1
 fi
