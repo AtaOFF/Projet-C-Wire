@@ -15,10 +15,10 @@ L'objectif esr de permettre une analyse rapide et structurée des données fourn
 2. Lancement du projet
    - Ouvrez le terminal et accédez au répertoire contenant les fichiers source.
    - Donner les droits d'exécution au script Shell : ``` chmod +x ../c-wire.sh ```
-   - Compilez le programme à l'aide de la commande suivante : ``` ./c-wire.sh <fichier_csv> <type_station> <type_consommateur>```
+   - Compilez le programme à l'aide de la commande suivante : ``` ./c-wire.sh <fichier_dat> <type_station> <type_consommateur>```
 
 ## Arguments possibles
-1. ```<fichier.csv>```
+1. ```<fichier.dat>```
 
    Chemin vers le fichier CSV contenant les données d'entrée (un fichier de simulation est fournis dans le dépot)
    
