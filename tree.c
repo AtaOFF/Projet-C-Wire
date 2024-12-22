@@ -1,22 +1,31 @@
 #include "settings.h"
 
-//
+
+//Function that returns the minimum between two values
 int min(int a, int b){
     return(a<b) ? a : b;
 }
 
+
+//Function that returns the minimum between three values
 int min3(int a, int b, int c){
     return min(a, min(b,c));
 }
 
+
+//Function that returns the maximum between two values
 int max(int a, int b){
     return(a>b) ? a : b;
 }
 
+
+//Function that returns the maximum between three values
 int max3(int a, int b, int c){
     return max(a, max(b,c));
 }
 
+
+//Function that creates a new station 
 Station *createStation(int Id,long Capacity,long Load){
     Station * new = malloc(sizeof(Station));
     if (new == NULL){
@@ -32,6 +41,9 @@ Station *createStation(int Id,long Capacity,long Load){
     return new;
 }
 
+
+//Function that looks for an identifier int the tree and returns 1 if found and 0 otherwise
+//The pointer **searched stores the address of the found station
 int search(Station* a, int id, Station** searched) {
     if (a == NULL) {
         return 0;
@@ -47,6 +59,8 @@ int search(Station* a, int id, Station** searched) {
     }
 } 
 
+
+//Procedure for the infix path of the tree
 void Infix (Station *p){ 
     if(p != NULL){
         Infix(p -> leftSon);
@@ -55,6 +69,8 @@ void Infix (Station *p){
     }
 }
 
+
+//Procedure to remove all nodes from the tree recursively
 void deleteTree(Station* root) {
     if (root == NULL) {
         return;
@@ -64,6 +80,8 @@ void deleteTree(Station* root) {
     free(root);
 }
 
+
+//Function to rotate left
 Station* rotateLeft(Station* a){
     Station* pivot = a -> rightSon; 
     int eq_a = a -> balance;
@@ -75,6 +93,8 @@ Station* rotateLeft(Station* a){
     return pivot; 
 }
 
+
+//Function to rotate right
 Station* rotateRight(Station* a){
     Station* pivot = a -> leftSon; 
     int eq_a = a -> balance;
@@ -86,34 +106,22 @@ Station* rotateRight(Station* a){
     return pivot; 
 }
 
-int getHeight(Station* a) {
-    if (a == NULL){
-        return 0;
-    }
-    return 1 + max(getHeight(a -> leftSon), getHeight(a -> rightSon));
-}
 
-
-int getBalance(Station* a){
-    if (a == NULL){
-        return 0;
-    }
-    return getHeight(a -> rightSon) - getHeight(a -> leftSon);
-}
-
-
+//Function to perform a double left rotation
 Station* doublerotationLeft(Station* a){
     a -> rightSon = rotateRight(a -> rightSon);
     return rotateLeft(a);
 }
 
 
+//Function to perform a double right rotation
 Station* doublerotationRight(Station* a){
     a -> leftSon = rotateLeft(a -> leftSon);
     return rotateRight(a);
 }
 
 
+//Function that balances the tree
 Station* balance(Station* a){
     if(a == NULL){
         exit(2);
@@ -143,6 +151,8 @@ Station* balance(Station* a){
     return a;
 }
 
+
+//Function to insert a node in the tree
 Station* insertStation(Station* a, int id, long capacity, long load, int* h) {
     if (a == NULL) { 
         *h = 1;
