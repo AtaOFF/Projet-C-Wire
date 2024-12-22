@@ -1,9 +1,7 @@
 #!/bin/bash
 
 
-make > /dev/null 2>&1 || true
-export MAKEFLAGS="--silent"
-
+make > /dev/null 2>&1
 
 # Function: Display help
 display_help() {
@@ -24,33 +22,6 @@ display_help() {
 
 
 
-#Check if the folder codeC exists. Otherwise, an error code is returned.
-if [ ! -d "./codeC" ]; then
-echo "Error : The folder ./codeC does not exist." >&2
-exit 1
-fi
-
-
-
-#Check if makefile exists
-#Otherwise, an error code is returned.
-if [ ! -f "./codeC/makefile" ]; then
-echo "Error : Makefile does not exist." >&2
-exit 1
-fi
-
-
-#Check if graphs folder exists. Otherwise, create it
-if [ ! -d "graphs" ]; then
-mkdir -p "graphs"
-  if [ $? -ne 0 ]; then
-  echo "Error : Creation of the folder failed." >&2
-  exit 1
-  fi
-fi
-
-
-
 #Start timer
 A=$(date +%s.%N)
 
@@ -65,47 +36,18 @@ fi
 done
 
 
-#Implementation of the programme
-#If compilation fails, return an error code
-make -C ./codeC
-if [ $? -ne 0 ]; then
-echo "Error : Compilation failed." >&2
-exit 1
-fi
-
-
-
-#Check if the executable C exists, can be read, and be executed.
-#Otherwise, an error code is returned.
-if [ ! -f "./codeC/exec" ]; then
-echo "Error : The executable C does not exist." >&2
-exit 1
-fi
-
-if [ ! -r "./codeC/exec" ]; then
-echo "Error : The executable C cannot be read." >&2
-exit 1
-fi
-
-if [ ! -x "./codeC/exec" ]; then
-echo "Error : The executable C cannot be executed." >&2
-exit 1
-fi
-
-
-
 #Check for required parameters. If one or more are missing, an error message is displayed,
 #display_help fonction is called and an error code is returned.
 if [[ -z "$1" || -z "$2" || -z "$3" ]]; then
-echo "Error : Missing parameters." >&2
-display_help
-exit 1
+  echo "Error : Missing parameters." >&2
+  display_help
+  exit 1
 fi
 
-#Check if the first parameter is the good path to the DAT file. Otherwise, an error message is displayed,
+#Check if the first parameter is the good path to the CSV file. Otherwise, an error message is displayed,
 #display_help fonction is called and an error code is returned.
 if [[ ! -f "$1" || "$1" != *.dat ]]; then
-echo "Error : The first parameter must be a valid path to an existing .dat file. " >&2
+echo "Error : The first parameter must be a valid path to an existing .csv file. " >&2
 display_help
 exit 1
 fi
@@ -190,12 +132,12 @@ fi
 #Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
 if [[ "$2" == "hvb" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./codeC/exec | while read line;
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 != "-" && $3 == "-" && $4 == "-" == $7 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./exec | while read line;
   do echo $line
   done > hvb_comp_$4.csv
   sort -t ';' -k2,2n hvb_comp_$4.csv -o hvb_comp_$4.csv
   else
-  awk -F';'  '$2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $8 != "-" || $2 != "-" && $3 == "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./codeC/exec | while read line;
+  awk -F';'  '$2 != "-" && $3 == "-" && $4 == "-" && $5 != "-" && $8 != "-" || $2 != "-" && $3 == "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f2,7,8 | tr '-' '0' | ./exec | while read line;
   do
   echo $line
   done > hvb_comp.csv
@@ -210,13 +152,13 @@ fi
 #Redirection results to an output file with the appropriate name.
 if [[ "$2" == "hva" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 != "-" && $3 != "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f3,7,8 | tr '-' '0' | ./codeC/exec | while read line;
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 != "-" && $3 != "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f3,7,8 | tr '-' '0' | ./exec | while read line;
   do
   echo $line
   done > hva_comp_$4.csv
   sort -t ';' -k2,2n hva_comp_$4.csv -o hva_comp_$4.csv
   else
-  awk -F';'  '$2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $8 != "-" || $2 != "-" && $3 != "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f3,7,8 | tr '-' '0' | ./codeC/exec | while read line;
+  awk -F';'  '$2 == "-" && $3 != "-" && $4 == "-" && $5 != "-" && $8 != "-" || $2 != "-" && $3 != "-" && $4 == "-" && $7 != "-"' "$1" | cut -d';' -f3,7,8 | tr '-' '0' | ./exec | while read line;
   do
   echo $line
   done > hva_comp.csv
@@ -230,13 +172,13 @@ fi
 #Redirection results to an output file with the appropriate name.
 if [[ "$2" == "lv" ]] && [[ "$3" == "comp" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC/exec | while read line;
+  awk -F';'  -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./exec | while read line;
   do
   echo $line
   done > lv_comp_$4.csv
   sort -t ';' -k2,2n lv_comp_$4.csv -o lv_comp_$4.csv
   else
-  awk -F';'  '$2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC/exec | while read line;
+  awk -F';'  '$2 == "-" && $3 == "-" && $4 != "-" && $5 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./exec | while read line;
   do
   echo $line
   done > lv_comp.csv
@@ -250,13 +192,13 @@ fi
 #Redirection results to an output file with the appropriate name.
 if [[ "$2" == "lv" ]] && [[ "$3" == "indiv" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $6 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC/exec | while read line;
+  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $6 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./exec | while read line;
   do
   echo $line
   done > lv_indiv_$4.csv
   sort -t ';' -k2,2n lv_indiv_$4.csv -o lv_indiv_$4.csv
   else
-  awk -F';' '$2 == "-" && $3 == "-" && $4 != "-" && $6 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC/exec | while read line;
+  awk -F';' '$2 == "-" && $3 == "-" && $4 != "-" && $6 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./exec | while read line;
   do
   echo $line
   done > lv_indiv.csv
@@ -265,29 +207,25 @@ if [[ "$2" == "lv" ]] && [[ "$3" == "indiv" ]]; then
 fi
 
 #5. Individuals and companies linked to a LV station (lv all) :
-#Selection of the collones concerned in the CSV file.
-#Extraction of these in the executable by replacing the "-"" with "0" to facilitate data manipulation.
-#Redirection results to an output file with the appropriate name.
-#In this case (lv all), create an additional file with the 10 lv stations that use most energy,
-#and the 10 that use least energy.
 if [[ "$2" == "lv" ]] && [[ "$3" == "all" ]]; then
   if [[ -n "$4" ]]; then
-  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC/exec| while read line;
+  awk -F';' -v power_plant="$4" '$1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $8 != "-" || $1 == power_plant && $2 == "-" && $3 == "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./exec | while read line;
   do
   echo $line
   done > lv_all_$4.csv
   sort -t ';' -k2,2n lv_all_$4.csv -o lv_all_$4.csv
   head -n 10 lv_all_$4.csv > lv_min_max_$4.csv
   tail -n 10 lv_all_$4.csv >> lv_min_max_$4.csv
-# Add the graph differenec in a new column
+
+  # Ajouter la différence dans une nouvelle colonne
   awk -F';' 'NR==1{print $0";Difference"} NR>1{print $0";"($3-$2)}' lv_min_max_$4.csv > lv_min_max_with_diff_$4.csv
 
-# Generate the graph with Gnuplot
-  gnuplot -e "filename='lv_min_max_with_diff_$4.csv'; outputfile='lv_min_max_bars_$4.png'" plot_lv.gnuplot
+  # Générer le graphique avec Gnuplot
+  gnuplot -e "filename='lv_min_max_with_diff_$4.csv'; outputfile='lv_min_max_bars_$4.png'" graphs/plot_lv.gnuplot
 
-  echo "Graph generated : lv_min_max_bars_$4.png"
+  echo "Graphique généré : lv_min_max_bars_$4.png"
   else
-  awk -F';' '$2 == "-" && $3 == "-" && $4 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./codeC/exec | while read line;
+  awk -F';' '$2 == "-" && $3 == "-" && $4 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./exec | while read line;
   do
   echo $line
   done > lv_all.csv
@@ -295,14 +233,14 @@ if [[ "$2" == "lv" ]] && [[ "$3" == "all" ]]; then
   head -n 10 lv_all.csv > lv_min_max.csv
   tail -n 10 lv_all.csv >> lv_min_max.csv
 
-# Add the graph differenec in a new column
+  # Ajouter la différence dans une nouvelle colonne
   awk -F';' 'NR==1{print $0";Difference"} NR>1{print $0";"($3-$2)}' lv_min_max.csv > lv_min_max_with_diff.csv
 
-# Generate the graph with Gnuplot
-  gnuplot -e "filename='lv_min_max_with_diff.csv'; outputfile='lv_min_max_bars.png'" plot_lv.gnuplot
+  # Générer le graphique avec Gnuplot
+  gnuplot -e "filename='lv_min_max_with_diff.csv'; outputfile='lv_min_max_bars.png'" graphs/plot_lv.gnuplot
 
-  echo "Graph generated : lv_min_max_bars.png"
-fi
+  echo "Graphique généré : lv_min_max_bars.png"
+  fi
 fi
 
 
