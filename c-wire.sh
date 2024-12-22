@@ -67,7 +67,7 @@ done
 
 #Implementation of the programme
 #If compilation fails, return an error code
-make
+make -C ./codeC
 if [ $? -ne 0 ]; then
 echo "Error : Compilation failed." >&2
 exit 1
