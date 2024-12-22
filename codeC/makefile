@@ -2,10 +2,10 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g
 LDFLAGS =
-TARGET = exec
-SOURCES = codeC/main.c codeC/tree.c
+TARGET = codeC/exec
+SOURCES = ./codeC/main.c ./codeC/tree.c
 OBJECTS = $(SOURCES:.c=.o)
-DEPS = codeC/settings.h
+DEPS = ./codeC/settings.h
 
 #Default rule to check if sources have changed
 .PHONY: all
@@ -17,7 +17,7 @@ $(TARGET): $(OBJECTS)
 	@echo "Compilation réussie : exécutable généré -> $(TARGET)"
 
 #Rule for building object files
-%.o: %.c $(DEPS)
+codeC/%.o: codeC/%.c $(DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 #Rule to run the program
