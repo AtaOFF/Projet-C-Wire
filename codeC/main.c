@@ -18,7 +18,7 @@ int main() {
 
     printf("Identifier;Capacity;Load\n");
     do{
-        tmp = scanf("%d;%ld;%ld\n", &arg1, &arg2, &arg3);
+        tmp = scanf("%d:%ld:%ld\n", &arg1, &arg2, &arg3);
 //Retrieval of the 3 arguments from the shell in variables
 //The tmp variable takes the return value of the scanf
 
