@@ -261,6 +261,13 @@ if [[ "$2" == "lv" ]] && [[ "$3" == "all" ]]; then
   sort -t ';' -k2,2n lv_all_$4.csv -o lv_all_$4.csv
   head -n 10 lv_all_$4.csv > lv_min_max_$4.csv
   tail -n 10 lv_all_$4.csv >> lv_min_max_$4.csv
+# Add the graph differenec in a new column
+  awk -F';' 'NR==1{print $0";Difference"} NR>1{print $0";"($3-$2)}' lv_min_max_$4.csv > lv_min_max_with_diff_$4.csv
+
+# Generate the graph with Gnuplot
+  gnuplot -e "filename='lv_min_max_with_diff_$4.csv'; outputfile='lv_min_max_bars_$4.png'" plot_lv.gnuplot
+
+  echo "Graph generated : lv_min_max_bars_$4.png"
   else
   awk -F';' '$2 == "-" && $3 == "-" && $4 != "-" && $8 != "-" || $2 == "-" && $3 != "-" && $4 != "-" && $7 != "-"' "$1" | cut -d';' -f4,7,8 | tr '-' '0' | ./exec | while read line;
   do
@@ -269,6 +276,13 @@ if [[ "$2" == "lv" ]] && [[ "$3" == "all" ]]; then
   sort -t ';' -k2,2n lv_all.csv -o lv_all.csv
   head -n 10 lv_all.csv > lv_min_max.csv
   tail -n 10 lv_all.csv >> lv_min_max.csv
+# Add the graph differenec in a new column
+  awk -F';' 'NR==1{print $0";Difference"} NR>1{print $0";"($3-$2)}' lv_min_max.csv > lv_min_max_with_diff.csv
+
+# Generate the graph with Gnuplot
+  gnuplot -e "filename='lv_min_max_with_diff.csv'; outputfile='lv_min_max_bars.png'" plot_lv.gnuplot
+
+  echo "Graph generated : lv_min_max_bars.png"
 fi
 fi
 
