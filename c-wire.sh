@@ -34,7 +34,7 @@ fi
 
 #Check if makefile exists
 #Otherwise, an error code is returned.
-if [ ! -f "./codeC/makefile" ]; then
+if [ ! -f "./codeC/Makefile" ]; then
 echo "Error : Makefile does not exist." >&2
 exit 1
 fi
