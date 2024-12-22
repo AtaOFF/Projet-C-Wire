@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -Werror -g
 LDFLAGS =
 TARGET = codeC/exec
 SOURCES = ./codeC/main.c ./codeC/tree.c
-OBJECTS = $(SOURCES:.c=.o)
+OBJECTS = $(SOURCES:./%.c=./%.o)
 DEPS = ./codeC/settings.h
 
 #Default rule to check if sources have changed
