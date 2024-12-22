@@ -48,5 +48,9 @@ int main() {
 
     Infix(tree);
 //Do an infix path of the tree so that the data is sorted in ascending order of identifier
+
+    Delete(tree);
+//Free the memory of the tree
+
     return 0;
 }

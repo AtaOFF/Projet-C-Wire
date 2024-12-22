@@ -1,4 +1,4 @@
-# Variables
+#Variables
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g
 LDFLAGS =
@@ -7,30 +7,30 @@ SOURCES = main.c tree.c
 OBJECTS = $(SOURCES:.c=.o)
 DEPS = settings.h
 
-# Règle par défaut pour vérifier si les sources ont changé
+#Default rule to check if sources have changed
 .PHONY: all
 
-# Règle pour construire l'exécutable
+#Rule to build the executable
 $(TARGET): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $(TARGET)
 	chmod +x $(TARGET)
 	@echo "Compilation réussie : exécutable généré -> $(TARGET)"
 
-# Règle pour construire les fichiers objets
+#Rule for building object files
 %.o: %.c $(DEPS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Règle pour exécuter le programme
+#Rule to run the program
 run: $(TARGET)
 	./$(TARGET)
 
-# Règle pour nettoyer les fichiers générés
+#Rule to clean generated files
 clean:
 	rm -f $(OBJECTS) $(TARGET)
 
-# Règle pour nettoyer uniquement les fichiers objets
+#Rule to clean only object files
 clean-obj:
 	rm -f $(OBJECTS)
 
-# Indique que ces règles ne correspondent pas à des fichiers
+#Indicates that these rules do not match files
 .PHONY: all clean clean-obj run
