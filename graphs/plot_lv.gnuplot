@@ -24,3 +24,4 @@ set arrow from -0.5,0 to 20.5,0 nohead lt 1 lc rgb "black" lw 2
 # Plot en barres
 plot "lv_min_max_with_diff.csv" using 0:($4>0?$4:0):xtic(1) with boxes lc rgb "red" title "Surcharge", \
      "" using 0:($4<0?$4:0) with boxes lc rgb "green" title "Marge"
+
